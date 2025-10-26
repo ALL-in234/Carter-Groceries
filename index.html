@@ -83,11 +83,67 @@
   <div id="root"></div>
 
   <script type="text/babel">
-    const { useState, useEffect } = React;
+  const { useState, useEffect } = React;
 
-    // 主畫面組件
-    const MainScreen = ({ onCarClick }) => (
-      <div className="flex flex-col items-center h-screen bg-gray-100 p-4">
+  // 主畫面組件
+  const MainScreen = ({ onCarClick }) => (
+    <div className="flex flex-col items-center h-screen bg-gray-100 p-4">
+      <div className="flex justify-between w-full mb-4">
+        <button className="text-2xl text-gray-600 icon-hover" aria-label="開啟選單">
+          <i className="fas fa-bars"></i>
+        </button>
+        <h1 className="text-xl font-bold">Carter-Groceries</h1>
+        <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+      </div>
+      <div className="grid grid-cols-2 gap-4 w-full mb-4">
+        <button className="flex items-center justify-center bg-red-500 text-white font-bold py-4 rounded-lg hover:bg-red-600 transition-colors" aria-label="房屋選項">
+          <i className="fas fa-home mr-2"></i> 房屋
+        </button>
+        <button
+          onClick={onCarClick}
+          className="flex items-center justify-center bg-teal-400 text-white font-bold py-4 rounded-lg hover:bg-teal-500 transition-colors"
+          aria-label="汽車選項"
+        >
+          <i className="fas fa-car mr-2"></i> 汽車
+        </button>
+        <button className="flex items-center justify-center bg-purple-500 text-white font-bold py-4 rounded-lg hover:bg-purple-600 transition-colors" aria-label="股票選項">
+          <i className="fas fa-chart-line mr-2"></i> 股票
+        </button>
+        <button className="flex items-center justify-center bg-green-500 text-white font-bold py-4 rounded-lg hover:bg-green-600 transition-colors" aria-label="加密貨幣選項">
+          <i className="fas fa-coins mr-2"></i> 加密貨幣
+        </button>
+        <button className="flex items-center justify-center bg-cyan-500 text-white font-bold py-4 rounded-lg hover:bg-cyan-600 transition-colors" aria-label="服裝選項">
+          <i className="fas fa-tshirt mr-2"></i> 服裝
+        </button>
+        <button className="flex items-center justify-center bg-yellow-200 text-black font-bold py-4 rounded-lg hover:bg-yellow-300 transition-colors" aria-label="寵物選項">
+          <i className="fas fa-paw mr-2"></i> 寵物
+        </button>
+      </div>
+    </div>
+  );
+
+  // 汽車畫面組件
+  const CarScreen = ({ onBackClick, onDetailsClick }) => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const carsPerPage = 4;
+
+    const cars = [
+      { src: "image/car-benz.jpg", alt: "BMW Car", price: "HK $15000", details: { plate: "yyyyy", year: 2022, seats: 5, km: 18000 } },
+      { src: "image/car-tesla.jpg", alt: "Tesla Car", price: "HK $10000", details: { plate: "xxxxx", year: 2023, seats: 4, km: 23000 } },
+      { src: "image/ac2234_n.jpg", alt: "ac2234_n Car", price: "HK $12000", details: { plate: "zzzzz", year: 2021, seats: 4, km: 25000 } },
+      { src: "image/zz1177.jpg", alt: "zz1177 Car", price: "HK $20000", details: { plate: "wwwww", year: 2020, seats: 6, km: 30000 } },
+      { src: "image/ok1277.jpg", alt: "ok1277 Car", price: "HK $13000", details: { plate: "aaaaa", year: 2019, seats: 5, km: 22000 } },
+    ];
+
+    const indexOfLastCar = currentPage * carsPerPage;
+    const indexOfFirstCar = indexOfLastCar - carsPerPage;
+    const currentCars = cars.slice(indexOfFirstCar, indexOfLastCar);
+    const totalPages = Math.ceil(cars.length / carsPerPage);
+
+    const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
+
+    return (
+      <div className="flex flex-col items-center h-screen bg-white p-4">
         <div className="flex justify-between w-full mb-4">
           <button className="text-2xl text-gray-600 icon-hover" aria-label="開啟選單">
             <i className="fas fa-bars"></i>
@@ -95,179 +151,217 @@
           <h1 className="text-xl font-bold">Carter-Groceries</h1>
           <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
         </div>
-        <div className="grid grid-cols-2 gap-4 w-full mb-4">
-          <button className="flex items-center justify-center bg-red-500 text-white font-bold py-4 rounded-lg hover:bg-red-600 transition-colors" aria-label="房屋選項">
-            <i className="fas fa-home mr-2"></i> 房屋
-          </button>
-          <button
-            onClick={onCarClick}
-            className="flex items-center justify-center bg-teal-400 text-white font-bold py-4 rounded-lg hover:bg-teal-500 transition-colors"
-            aria-label="汽車選項"
-          >
-            <i className="fas fa-car mr-2"></i> 汽車
-          </button>
-          <button className="flex items-center justify-center bg-purple-500 text-white font-bold py-4 rounded-lg hover:bg-purple-600 transition-colors" aria-label="股票選項">
-            <i className="fas fa-chart-line mr-2"></i> 股票
-          </button>
-          <button className="flex items-center justify-center bg-green-500 text-white font-bold py-4 rounded-lg hover:bg-green-600 transition-colors" aria-label="加密貨幣選項">
-            <i className="fas fa-coins mr-2"></i> 加密貨幣
-          </button>
-          <button className="flex items-center justify-center bg-cyan-500 text-white font-bold py-4 rounded-lg hover:bg-cyan-600 transition-colors" aria-label="服裝選項">
-            <i className="fas fa-tshirt mr-2"></i> 服裝
-          </button>
-          <button className="flex items-center justify-center bg-yellow-200 text-black font-bold py-4 rounded-lg hover:bg-yellow-300 transition-colors" aria-label="寵物選項">
-            <i className="fas fa-paw mr-2"></i> 寵物
-          </button>
+        <div className="sell-box w-full">
+          <h2 className="text-lg font-semibold">開始售賣你的產品</h2>
+          <button className="start-button mt-2">開始</button>
+        </div>
+        {currentCars.map((car, index) => (
+          <div key={index} className="w-full mt-4">
+            <div className="relative">
+              <img
+                src={car.src}
+                alt={car.alt}
+                className="car-image"
+                onError={(e) => { e.target.src = 'https://via.placeholder.com/300x200'; }}
+              />
+              <div className="flex justify-between items-center mt-2">
+                <button className="price-button">{car.price}</button>
+                <button
+                  className="details-button"
+                  onClick={() => onDetailsClick(car)}
+                >
+                  Details
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+        <div className="flex justify-center mt-4">
+          {Array.from({ length: totalPages }, (_, index) => (
+            <button
+              key={index + 1}
+              onClick={() => handlePageChange(index + 1)}
+              className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
+            >
+              {index + 1}
+            </button>
+          ))}
         </div>
       </div>
     );
+  };
 
-    // 汽車畫面組件
-    const CarScreen = ({ onBackClick, onDetailsClick }) => {
-      const [currentPage, setCurrentPage] = useState(1);
-      const carsPerPage = 4; // 每次顯示一輛車，模擬圖片樣式
-      
-      // 汽車資料
-      const cars = [
-        { src: "image/car-benz.jpg", alt: "BMW Car", price: "HK $15000", details: { plate: "yyyyy", year: 2022, seats: 5, km: 18000 } },
-        { src: "image/car-tesla.jpg", alt: "Tesla Car", price: "HK $10000", details: { plate: "xxxxx", year: 2023, seats: 4, km: 23000 } },
-        { src: "image/ac2234_n.jpg", alt: "ac2234_n Car", price: "HK $12000", details: { plate: "zzzzz", year: 2021, seats: 4, km: 25000 } },
-        { src: "image/zz1177.jpg", alt: "zz1177 Car", price: "HK $20000", details: { plate: "wwwww", year: 2020, seats: 6, km: 30000 } },
-        { src: "image/ok1277.jpg", alt: "ok1277 Car", price: "HK $13000", details: { plate: "aaaaa", year: 2019, seats: 5, km: 22000 } },
-      ];
-
-      // 計算當前頁面的汽車
-      const indexOfLastCar = currentPage * carsPerPage;
-      const indexOfFirstCar = indexOfLastCar - carsPerPage;
-      const currentCars = cars.slice(indexOfFirstCar, indexOfLastCar);
-
-      // 計算總頁數
-      const totalPages = Math.ceil(cars.length / carsPerPage);
-
-      // 分頁按鈕點擊處理
-      const handlePageChange = (pageNumber) => {
-        setCurrentPage(pageNumber);
-      };
-
-      return (
-        <div className="flex flex-col items-center h-screen bg-white p-4">
-          <div className="flex justify-between w-full mb-4">
-            <button className="text-2xl text-gray-600 icon-hover" aria-label="開啟選單">
-              <i className="fas fa-bars"></i>
-            </button>
-            <h1 className="text-xl font-bold">Carter-Groceries</h1>
-            <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
-          </div>
-          <div className="sell-box w-full">
-            <h2 className="text-lg font-semibold">開始售賣你的產品</h2>
-            <button className="start-button mt-2">開始</button>
-          </div>
-          {currentCars.map((car, index) => (
-            <div key={index} className="w-full mt-4">
-              <div className="relative">
-                <img
-                  src={car.src}
-                  alt={car.alt}
-                  className="car-image"
-                  onError={(e) => { e.target.src = 'https://via.placeholder.com/300x200'; }}
-                />
-                <div className="flex justify-between items-center mt-2">
-                  <button className="price-button">{car.price}</button>
-                  <button
-                    className="details-button"
-                    onClick={() => onDetailsClick(car)}
-                  >
-                    Details
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-          <div className="flex justify-center mt-4">
-            {Array.from({ length: totalPages }, (_, index) => (
-              <button
-                key={index + 1}
-                onClick={() => handlePageChange(index + 1)}
-                className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
-              >
-                {index + 1}
-              </button>
-            ))}
+  // 汽車細節畫面組件
+  const CarDetailsScreen = ({ onBackClick, car, onPurchaseClick }) => {
+    return (
+      <div className="flex flex-col items-center h-screen bg-white p-4">
+        <div className="flex justify-between w-full mb-4">
+          <button className="text-2xl text-gray-600 icon-hover" aria-label="開啟選單">
+            <i className="fas fa-bars"></i>
+          </button>
+          <h1 className="text-xl font-bold">Carter-Groceries</h1>
+          <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+        </div>
+        <div className="relative w-full">
+          <img
+            src={car.src}
+            alt={car.alt}
+            className="car-image"
+          />
+          <div className="car-details">
+            <div className="price-button mb-2">{car.price}</div>
+            <p>License Plate Number: {car.details.plate}</p>
+            <p>Product Year: {car.details.year}</p>
+            <p>Seats: {car.details.seats}</p>
+            <p>KM: {car.details.km} About</p>
           </div>
         </div>
-      );
-    };
-
-    // 汽車細節畫面組件
-    const CarDetailsScreen = ({ onBackClick, car }) => {
-      return (
-        <div className="flex flex-col items-center h-screen bg-white p-4">
-          <div className="flex justify-between w-full mb-4">
-            <button className="text-2xl text-gray-600 icon-hover" aria-label="開啟選單">
-              <i className="fas fa-bars"></i>
-            </button>
-            <h1 className="text-xl font-bold">Carter-Groceries</h1>
-            <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
-          </div>
-          <div className="relative w-full">
-            <img
-              src={car.src}
-              alt={car.alt}
-              className="car-image"
-            />
-            <div className="car-details">
-              <div className="price-button mb-2">{car.price}</div>
-              <p>License Plate Number: {car.details.plate}</p>
-              <p>Product Year: {car.details.year}</p>
-              <p>Seats: {car.details.seats}</p>
-              <p>KM: {car.details.km} About</p>
-            </div>
-          </div>
-          <div className="flex mt-4">
-            <button className="action-button">WTS</button>
-            <button className="email-button">Email</button>
-          </div>
+        <div className="flex mt-4">
+          <button className="action-button">WTS</button>
           <button
-            onClick={onBackClick}
-            className="bg-teal-500 text-white text-lg w-8 h-8 rounded-full flex items-center justify-center mt-4 hover:bg-teal-600 hover:scale-110 transition-transform duration-200"
-            aria-label="返回汽車畫面"
+            onClick={() => onPurchaseClick(car)}
+            className="email-button"
           >
-            <i className="fas fa-arrow-left"></i>
+            Purchase
           </button>
         </div>
-      );
+        <button
+          onClick={onBackClick}
+          className="bg-teal-500 text-white text-lg w-8 h-8 rounded-full flex items-center justify-center mt-4 hover:bg-teal-600 hover:scale-110 transition-transform duration-200"
+          aria-label="返回汽車畫面"
+        >
+          <i className="fas fa-arrow-left"></i>
+        </button>
+      </div>
+    );
+  };
+
+  // 購買畫面組件
+  const PurchaseScreen = ({ onBackClick, car }) => {
+    const [time, setTime] = useState('');
+    const [paymentMethod, setPaymentMethod] = useState('');
+
+    const handlePurchase = () => {
+      alert(`已購買 ${car.alt}，價格: ${car.price}，時間: ${time}，支付方式: ${paymentMethod}`);
     };
 
-    // 主應用程式組件
-    const App = () => {
-      const [screen, setScreen] = useState('main');
-      const [selectedCar, setSelectedCar] = useState(null);
-
-      const handleCarClick = () => setScreen('car');
-      const handleBackClick = () => setScreen('main');
-      const handleDetailsBackClick = () => setScreen('car');
-      const handleDetailsClick = (car) => {
-        setSelectedCar(car);
-        setScreen('details');
-      };
-
-      return (
-        <div>
-          {screen === 'main' && <MainScreen onCarClick={handleCarClick} />}
-          {screen === 'car' && <CarScreen onBackClick={handleBackClick} onDetailsClick={handleDetailsClick} />}
-          {screen === 'details' && (
-            <CarDetailsScreen
-              onBackClick={handleDetailsBackClick}
-              car={selectedCar}
-            />
-          )}
+    return (
+      <div className="flex flex-col items-center h-screen bg-white p-4">
+        <div className="flex justify-between w-full mb-4">
+          <button className="text-2xl text-gray-600 icon-hover" aria-label="開啟選單">
+            <i className="fas fa-bars"></i>
+          </button>
+          <h1 className="text-xl font-bold">Carter-Groceries</h1>
+          <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
         </div>
-      );
-    };
+        <img
+          src={car.src}
+          alt={car.alt}
+          className="car-image mb-4"
+        />
+        <div className="price-button mb-4">{car.price}</div>
+        <div className="w-full mb-4">
+          <label className="block text-lg font-semibold mb-2">Time</label>
+          <select
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+            className="w-full p-2 border rounded"
+          >
+            <option value="">即時</option>
+            <option value="預約">預約</option>
+          </select>
+          <p className="text-sm text-gray-500 mt-1">選擇預約或即時購買</p>
+        </div>
+        <div className="w-full mb-4">
+          <label className="block text-lg font-semibold mb-2">地址</label>
+          <input
+            type="text"
+            placeholder="請輸入地址"
+            className="w-full p-2 border rounded"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+          />
+        </div>
+        <div className="w-full mb-4">
+          <label className="block text-lg font-semibold mb-2">支付方式</label>
+          <div className="flex space-x-4">
+            <button
+              onClick={() => setPaymentMethod('現金')}
+              className={`action-button ${paymentMethod === '現金' ? 'bg-teal-600' : ''}`}
+            >
+              現金
+            </button>
+            <button
+              onClick={() => setPaymentMethod('FPS')}
+              className={`action-button ${paymentMethod === 'FPS' ? 'bg-teal-600' : ''}`}
+            >
+              FPS
+            </button>
+            <button
+              onClick={() => setPaymentMethod('Alipay')}
+              className={`action-button ${paymentMethod === 'Alipay' ? 'bg-teal-600' : ''}`}
+            >
+              Alipay
+            </button>
+          </div>
+        </div>
+        <button
+          onClick={handlePurchase}
+          className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors"
+        >
+          Purchase
+        </button>
+        <button
+          onClick={onBackClick}
+          className="bg-teal-500 text-white text-lg w-8 h-8 rounded-full flex items-center justify-center mt-4 hover:bg-teal-600 hover:scale-110 transition-transform duration-200"
+          aria-label="返回汽車細節畫面"
+        >
+          <i className="fas fa-arrow-left"></i>
+        </button>
+      </div>
+    );
+  };
 
-    // 渲染應用程式
-    ReactDOM.render(<App />, document.getElementById('root'));
-  </script>
-</body>
-</html>
+  // 主應用程式組件
+  const App = () => {
+    const [screen, setScreen] = useState('main');
+    const [selectedCar, setSelectedCar] = useState(null);
+
+    const handleCarClick = () => setScreen('car');
+    const handleBackClick = () => setScreen('main');
+    const handleDetailsBackClick = () => setScreen('car');
+    const handleDetailsClick = (car) => {
+      setSelectedCar(car);
+      setScreen('details');
+    };
+    const handlePurchaseClick = (car) => {
+      setSelectedCar(car);
+      setScreen('purchase');
+    };
+    const handlePurchaseBackClick = () => setScreen('details');
+
+    return (
+      <div>
+        {screen === 'main' && <MainScreen onCarClick={handleCarClick} />}
+        {screen === 'car' && <CarScreen onBackClick={handleBackClick} onDetailsClick={handleDetailsClick} />}
+        {screen === 'details' && (
+          <CarDetailsScreen
+            onBackClick={handleDetailsBackClick}
+            car={selectedCar}
+            onPurchaseClick={handlePurchaseClick}
+          />
+        )}
+        {screen === 'purchase' && (
+          <PurchaseScreen
+            onBackClick={handlePurchaseBackClick}
+            car={selectedCar}
+          />
+        )}
+      </div>
+    );
+  };
+
+  // 渲染應用程式
+  ReactDOM.render(<App />, document.getElementById('root'));
+</script>
 
