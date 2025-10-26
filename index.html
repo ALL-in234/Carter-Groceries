@@ -15,37 +15,24 @@
       transform: scale(1.1);
       transition: all 0.2s ease;
     }
-    .error-message {
-      color: #ef4444; /* Tailwind red-500 */
-      font-size: 12px;
-      margin-top: 5px;
-      display: none;
-      animation: fadeIn 0.3s ease-in;
+    .car-image {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
     }
-    input:invalid {
-      border-color: #ef4444;
-      box-shadow: 0 0 5px rgba(239, 68, 68, 0.5);
-    }
-    .highlight { color: #22c55e; font-weight: bold; } /* Tailwind green-500 */
-    .negative { color: #ef4444; } /* Tailwind red-500 */
-    .result-section {
+    .price-button {
       background-color: #000;
+      color: #00ff00;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: bold;
+    }
+    .details-button {
+      background-color: #00ced1;
       color: #fff;
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    .result-item { padding: 8px 0; font-size: 14px; }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    .animate-btn {
-      transition: transform 0.2s ease, background-color 0.2s ease;
-    }
-    .animate-btn:hover {
-      transform: scale(1.05);
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -56,7 +43,7 @@
     const { useState, useEffect } = React;
 
     // 主畫面組件
-    const MainScreen = ({ onShopClick, onGamesClick, onCalendarClick, currentScreen }) => (
+    const MainScreen = ({ onCalendarClick, onCarClick }) => (
       <div className="flex flex-col items-center h-screen bg-gray-100 p-4">
         <div className="flex justify-between w-full mb-4">
           <button className="text-2xl text-gray-600 icon-hover" aria-label="開啟選單">
@@ -65,27 +52,28 @@
           <h1 className="text-xl font-bold">ALL IN</h1>
           <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
         </div>
-        <div className="w-full bg-black text-white p-4 rounded-lg mb-4">
-          <p className="text-sm">帳戶餘額</p>
-          <div className="flex justify-between">
-            <p className="text-2xl font-bold">HKD $10000</p>
-            <p className="text-green-500 text-2xl font-bold">+$120</p>
-          </div>
-        </div>
-        <div className="flex w-full mb-4">
-          <button
-            onClick={onShopClick}
-            className="flex-1 bg-pink-500 text-white font-bold py-3 rounded-l-lg text-lg flex items-center justify-center hover:bg-pink-600 animate-btn"
-            aria-label="前往商店"
-          >
-            <i className="fas fa-shopping-cart mr-2"></i> 商店
+        <div className="grid grid-cols-2 gap-4 w-full mb-4">
+          <button className="flex items-center justify-center bg-red-500 text-white font-bold py-4 rounded-lg hover:bg-red-600 transition-colors" aria-label="房屋選項">
+            <i className="fas fa-home mr-2"></i> 房屋
           </button>
           <button
-            onClick={onGamesClick}
-            className="flex-1 bg-yellow-400 text-black font-bold py-3 rounded-r-lg text-lg flex items-center justify-center hover:bg-yellow-500 animate-btn"
-            aria-label="前往遊戲與活動"
+            onClick={onCarClick}
+            className="flex items-center justify-center bg-teal-400 text-white font-bold py-4 rounded-lg hover:bg-teal-500 transition-colors"
+            aria-label="汽車選項"
           >
-            <i className="fas fa-gamepad mr-2"></i> 遊戲 / 活動
+            <i className="fas fa-car mr-2"></i> 汽車
+          </button>
+          <button className="flex items-center justify-center bg-purple-500 text-white font-bold py-4 rounded-lg hover:bg-purple-600 transition-colors" aria-label="股票選項">
+            <i className="fas fa-chart-line mr-2"></i> 股票
+          </button>
+          <button className="flex items-center justify-center bg-green-500 text-white font-bold py-4 rounded-lg hover:bg-green-600 transition-colors" aria-label="加密貨幣選項">
+            <i className="fas fa-coins mr-2"></i> 加密貨幣
+          </button>
+          <button className="flex items-center justify-center bg-cyan-500 text-white font-bold py-4 rounded-lg hover:bg-cyan-600 transition-colors" aria-label="服裝選項">
+            <i className="fas fa-tshirt mr-2"></i> 服裝
+          </button>
+          <button className="flex items-center justify-center bg-yellow-200 text-black font-bold py-4 rounded-lg hover:bg-yellow-300 transition-colors" aria-label="寵物選項">
+            <i className="fas fa-paw mr-2"></i> 寵物
           </button>
         </div>
         <div className="absolute bottom-16">
@@ -97,143 +85,51 @@
             <i className="fas fa-plus"></i>
           </button>
         </div>
-        <div className="fixed bottom-0 w-full bg-white flex justify-around py-4 border-t">
-          <button className={`text-2xl ${currentScreen === 'main' ? 'text-teal-500' : 'text-gray-600'} icon-hover`} aria-label="首頁">
-            <i className="fas fa-home"></i>
-          </button>
-          <button className="text-2xl text-gray-600 icon-hover" aria-label="搜尋">
-            <i className="fas fa-search"></i>
-          </button>
-          <button className="text-2xl text-gray-600 icon-hover" aria-label="交易">
-            <i className="fas fa-exchange-alt"></i>
-          </button>
-          <button className="text-2xl text-gray-600 icon-hover" aria-label="支付">
-            <i className="fas fa-credit-card"></i>
-          </button>
-        </div>
       </div>
     );
 
-    // 商店畫面組件
-    const ShopScreen = ({ onBackClick, onStockClick, currentScreen }) => (
-      <div className="flex flex-col items-center h-screen bg-gray-100 p-4">
-        <div className="flex justify-between w-full mb-4">
-          <button className="text-2xl text-gray-600 icon-hover" aria-label="開啟選單">
-            <i className="fas fa-bars"></i>
-          </button>
-          <h1 className="text-xl font-bold">ALL IN</h1>
-          <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
-        </div>
-        <div className="w-full bg-black text-white p-4 rounded-lg mb-4">
-          <p className="text-sm">帳戶餘額</p>
-          <div className="flex justify-between">
-            <p className="text-2xl font-bold">HKD $10000</p>
-            <p className="text-green-500 text-2xl font-bold">+$120</p>
-          </div>
-        </div>
-        <div className="flex w-full justify-end mb-4">
-          <button
-            onClick={onBackClick}
-            className="bg-black text-white font-bold py-2 px-4 rounded-full hover:bg-gray-800 animate-btn"
-            aria-label="返回主畫面"
-          >
-            返回
-          </button>
-        </div>
-        <div className="grid grid-cols-2 gap-4 w-full">
-          <button className="flex items-center justify-center bg-red-500 text-white font-bold py-4 rounded-lg hover:bg-red-600 animate-btn" aria-label="房屋選項">
-            <i className="fas fa-home mr-2"></i> 房屋
-          </button>
-          <button className="flex items-center justify-center bg-teal-400 text-white font-bold py-4 rounded-lg hover:bg-teal-500 animate-btn" aria-label="汽車選項">
-            <i className="fas fa-car mr-2"></i> 汽車
-          </button>
-          <button
-            onClick={onStockClick}
-            className="flex items-center justify-center bg-purple-500 text-white font-bold py-4 rounded-lg hover:bg-purple-600 animate-btn"
-            aria-label="股票選項"
-          >
-            <i className="fas fa-chart-line mr-2"></i> 股票
-          </button>
-          <button className="flex items-center justify-center bg-green-500 text-white font-bold py-4 rounded-lg hover:bg-green-600 animate-btn" aria-label="加密貨幣選項">
-            <i className="fas fa-coins mr-2"></i> 加密貨幣
-          </button>
-          <button className="flex items-center justify-center bg-cyan-500 text-white font-bold py-4 rounded-lg hover:bg-cyan-600 animate-btn" aria-label="服裝選項">
-            <i className="fas fa-tshirt mr-2"></i> 服裝
-          </button>
-          <button className="flex items-center justify-center bg-yellow-200 text-black font-bold py-4 rounded-lg hover:bg-yellow-300 animate-btn" aria-label="寵物選項">
-            <i className="fas fa-paw mr-2"></i> 寵物
-          </button>
-        </div>
-        <div className="fixed bottom-0 w-full bg-white flex justify-around py-4 border-t">
-          <button onClick={onBackClick} className={`text-2xl ${currentScreen === 'main' ? 'text-teal-500' : 'text-gray-600'} icon-hover`} aria-label="首頁">
-            <i className="fas fa-home"></i>
-          </button>
-          <button className="text-2xl text-gray-600 icon-hover" aria-label="搜尋">
-            <i className="fas fa-search"></i>
-          </button>
-          <button className="text-2xl text-gray-600 icon-hover" aria-label="交易">
-            <i className="fas fa-exchange-alt"></i>
-          </button>
-          <button className="text-2xl text-gray-600 icon-hover" aria-label="支付">
-            <i className="fas fa-credit-card"></i>
-          </button>
+    // 汽車畫面組件
+const CarScreen = ({ onBackClick }) => (
+  <div className="flex flex-col items-center h-screen bg-white p-4">
+    <div className="flex justify-between w-full mb-4">
+      <button className="text-2xl text-gray-600 icon-hover" aria-label="開啟選單">
+        <i className="fas fa-bars"></i>
+      </button>
+      <h1 className="text-xl font-bold">Car</h1>
+      <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+    </div>
+    <div className="w-full mb-4">
+      <div className="relative">
+        <img src="https://drive.google.com/uc?export=download&id=11YKeGF9qOHtmnL6iE6n2sKJzLkzVmO9K" alt="Tesla Car" className="car-image mb-2" />
+        <div className="flex justify-between items-center">
+          <button className="price-button">HK $10000</button>
+          <button className="details-button">Details</button>
         </div>
       </div>
-    );
-
-    // 遊戲畫面組件
-    const GamesScreen = ({ onBackClick, currentScreen }) => (
-      <div className="flex flex-col items-center h-screen bg-gray-100 p-4">
-        <div className="flex justify-between w-full mb-4">
-          <button className="text-2xl text-gray-600 icon-hover" aria-label="開啟選單">
-            <i className="fas fa-bars"></i>
-          </button>
-          <h1 className="text-xl font-bold">ALL IN</h1>
-          <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
-        </div>
-        <div className="w-full bg-black text-white p-4 rounded-lg mb-4">
-          <p className="text-sm">帳戶餘額</p>
-          <div className="flex justify-between">
-            <p className="text-2xl font-bold">HKD $10000</p>
-            <p className="text-green-500 text-2xl font-bold">+$120</p>
-          </div>
-        </div>
-        <div className="flex w-full justify-end mb-4">
-          <button
-            onClick={onBackClick}
-            className="bg-black text-white font-bold py-2 px-4 rounded-full hover:bg-gray-800 animate-btn"
-            aria-label="返回主畫面"
-          >
-            返回
-          </button>
-        </div>
-        <div className="grid grid-cols-2 gap-4 w-full">
-          <button className="flex items-center justify-center bg-blue-500 text-white font-bold py-4 rounded-lg hover:bg-blue-600 animate-btn" aria-label="遊戲1">
-            <i className="fas fa-dice mr-2"></i> 遊戲 1
-          </button>
-          <button className="flex items-center justify-center bg-orange-500 text-white font-bold py-4 rounded-lg hover:bg-orange-600 animate-btn" aria-label="活動1">
-            <i className="fas fa-trophy mr-2"></i> 活動 1
-          </button>
-        </div>
-        <div className="fixed bottom-0 w-full bg-white flex justify-around py-4 border-t">
-          <button onClick={onBackClick} className={`text-2xl ${currentScreen === 'main' ? 'text-teal-500' : 'text-gray-600'} icon-hover`} aria-label="首頁">
-            <i className="fas fa-home"></i>
-          </button>
-          <button className="text-2xl text-gray-600 icon-hover" aria-label="搜尋">
-            <i className="fas fa-search"></i>
-          </button>
-          <button className="text-2xl text-gray-600 icon-hover" aria-label="交易">
-            <i className="fas fa-exchange-alt"></i>
-          </button>
-          <button className="text-2xl text-gray-600 icon-hover" aria-label="支付">
-            <i className="fas fa-credit-card"></i>
-          </button>
+    </div>
+    <div className="w-full mb-4">
+      <div className="relative">
+        <img src="https://drive.google.com/uc?export=download&id=1dfRAl4k7xN6voQ0Q9Opi9c1Ym4ZFWKSo" alt="BMW Car" className="car-image mb-2" />
+        <div className="flex justify-between items-center">
+          <button className="price-button">HK $15000</button>
+          <button className="details-button">Details</button>
         </div>
       </div>
-    );
+    </div>
+    <div className="absolute bottom-16">
+      <button
+        onClick={onBackClick}
+        className="bg-teal-500 text-white text-2xl w-12 h-12 rounded-full flex items-center justify-center hover:bg-teal-600 hover:scale-110 transition-transform duration-200"
+        aria-label="返回"
+      >
+        <i className="fas fa-arrow-left"></i>
+      </button>
+    </div>
+  </div>
+);
 
     // 日曆畫面組件
-    const CalendarScreen = ({ onBackClick, currentScreen }) => {
+    const CalendarScreen = ({ onBackClick }) => {
       const [focusedDate, setFocusedDate] = useState(new Date());
       const [selectedDate, setSelectedDate] = useState(new Date());
       const today = new Date();
@@ -324,658 +220,6 @@
               <i className="fas fa-plus"></i>
             </button>
           </div>
-          <div className="fixed bottom-0 w-full bg-white flex justify-around py-4 border-t">
-            <button onClick={onBackClick} className={`text-2xl ${currentScreen === 'main' ? 'text-teal-500' : 'text-gray-600'} icon-hover`} aria-label="首頁">
-              <i className="fas fa-home"></i>
-            </button>
-            <button className="text-2xl text-gray-600 icon-hover" aria-label="搜尋">
-              <i className="fas fa-search"></i>
-            </button>
-            <button className="text-2xl text-gray-600 icon-hover" aria-label="交易">
-              <i className="fas fa-exchange-alt"></i>
-            </button>
-            <button className="text-2xl text-gray-600 icon-hover" aria-label="支付">
-              <i className="fas fa-credit-card"></i>
-            </button>
-          </div>
-        </div>
-      );
-    };
-
-    // 股票計算器輸入組件（優化 UI）
-    const StockCalculatorInput = ({ onBackClick, onCalculate, currentScreen }) => {
-      const [stockEntries, setStockEntries] = useState([
-        {
-          id: 1,
-          stockCode: '',
-          buyPrice: '',
-          quantityInput: '',
-          predictPrice: '',
-          stopLossPrice: '',
-          addPositionPrice: '',
-          addPositionMethod: '1',
-          addPositionInput: '',
-        },
-      ]);
-      const [totalAssets, setTotalAssets] = useState('');
-      const [errors, setErrors] = useState({});
-      const [loading, setLoading] = useState(false);
-
-      const addStockEntry = () => {
-        setStockEntries([
-          ...stockEntries,
-          {
-            id: stockEntries.length + 1,
-            stockCode: '',
-            buyPrice: '',
-            quantityInput: '',
-            predictPrice: '',
-            stopLossPrice: '',
-            addPositionPrice: '',
-            addPositionMethod: '1',
-            addPositionInput: '',
-          },
-        ]);
-      };
-
-      const removeStockEntry = (id) => {
-        if (stockEntries.length === 1) {
-          setErrors({ ...errors, general: '至少保留一筆股票資料！' });
-          return;
-        }
-        setStockEntries(stockEntries.filter((entry) => entry.id !== id));
-        validateAllInputs();
-      };
-
-      const updateStockEntry = (id, field, value) => {
-        setStockEntries(
-          stockEntries.map((entry) =>
-            entry.id === id ? { ...entry, [field]: value } : entry
-          )
-        );
-        validateInput(field, value, id);
-      };
-
-      const validateInput = (field, value, id) => {
-        const newErrors = { ...errors };
-        const errorKey = `${field}_${id}`;
-        newErrors[errorKey] = '';
-
-        if (field === 'totalAssets' && value === '') return true;
-
-        if (field === 'stockCode') {
-          if (!/^[A-Za-z0-9.]+$/.test(value)) {
-            newErrors[errorKey] = '請輸入有效的股票代碼！';
-          }
-        } else if (field === 'quantityInput') {
-          if (value.endsWith('%')) {
-            if (!totalAssets) {
-              newErrors[errorKey] = '使用百分比時必須輸入總資產金額！';
-            } else {
-              const percent = value.replace(/[^0-9.]/g, '');
-              if (!/^\d+(\.\d+)?$/.test(percent) || parseFloat(percent) > 100 || parseFloat(percent) <= 0) {
-                newErrors[errorKey] = '請輸入有效的百分比 (0-100)！';
-              }
-            }
-          } else {
-            if (!/^\d+$/.test(value) || parseInt(value) <= 0) {
-              newErrors[errorKey] = '請輸入有效的股數（正整數）！';
-            }
-          }
-        } else {
-          if (value && parseFloat(value) <= 0) {
-            newErrors[errorKey] = '輸入值必須大於 0！';
-          }
-        }
-        setErrors(newErrors);
-        validateAllInputs();
-      };
-
-      const validateAllInputs = () => {
-        let allValid = true;
-        const newErrors = { ...errors };
-
-        if (totalAssets && parseFloat(totalAssets) <= 0) {
-          newErrors['totalAssets'] = '總資產金額必須大於 0！';
-          allValid = false;
-        }
-
-        stockEntries.forEach((entry) => {
-          const fields = [
-            { key: 'stockCode', errorKey: `stockCode_${entry.id}` },
-            { key: 'buyPrice', errorKey: `buyPrice_${entry.id}` },
-            { key: 'quantityInput', errorKey: `quantityInput_${entry.id}` },
-            { key: 'predictPrice', errorKey: `predictPrice_${entry.id}` },
-            { key: 'stopLossPrice', errorKey: `stopLossPrice_${entry.id}` },
-            { key: 'addPositionPrice', errorKey: `addPositionPrice_${entry.id}` },
-            { key: 'addPositionInput', errorKey: `addPositionInput_${entry.id}` },
-          ];
-
-          fields.forEach(({ key, errorKey }) => {
-            const value = entry[key];
-            if (!value && key !== 'totalAssets') {
-              newErrors[errorKey] = '此欄位為必填！';
-              allValid = false;
-            } else {
-              validateInput(key, value, entry.id);
-              if (newErrors[errorKey]) allValid = false;
-            }
-          });
-        });
-
-        setErrors(newErrors);
-        return allValid;
-      };
-
-      const fillStock = (id) => {
-        const entry = stockEntries.find((e) => e.id === id);
-        if (!entry.buyPrice || !entry.quantityInput) {
-          setErrors({ ...errors, [`buyPrice_${id}`]: '請先輸入買入價格和買入數量！' });
-          return;
-        }
-
-        const buyPrice = parseFloat(entry.buyPrice);
-        if (isNaN(buyPrice) || buyPrice <= 0) {
-          setErrors({ ...errors, [`buyPrice_${id}`]: '買入價格必須大於 0！' });
-          return;
-        }
-
-        let quantity;
-        if (entry.quantityInput.endsWith('%')) {
-          if (!totalAssets) {
-            setErrors({ ...errors, [`quantityInput_${id}`]: '使用百分比時必須輸入總資產金額！' });
-            return;
-          }
-          const buyPercentage = parseFloat(entry.quantityInput.replace(/%/, ''));
-          const buyAmount = totalAssets * (buyPercentage / 100);
-          quantity = Math.floor(buyAmount / buyPrice);
-          if (quantity <= 0) {
-            setErrors({ ...errors, [`quantityInput_${id}`]: '根據輸入的百分比計算出的買入數量必須大於 0！' });
-            return;
-          }
-        } else {
-          quantity = parseInt(entry.quantityInput);
-        }
-
-        const totalCost = buyPrice * quantity;
-        const predictPrice = (buyPrice * 1.10).toFixed(2);
-        const stopLossPrice = (buyPrice * 0.97).toFixed(2);
-        const addPositionPrice = (buyPrice * 0.80).toFixed(2);
-        const addPositionAmount = (totalCost * 0.20).toFixed(2);
-
-        setStockEntries(
-          stockEntries.map((e) =>
-            e.id === id
-              ? {
-                  ...e,
-                  predictPrice,
-                  stopLossPrice,
-                  addPositionPrice,
-                  addPositionMethod: '1',
-                  addPositionInput: addPositionAmount,
-                }
-              : e
-          )
-        );
-        validateAllInputs();
-      };
-
-      const calculate = () => {
-        if (!validateAllInputs()) {
-          setErrors({ ...errors, general: '請修正所有輸入錯誤！' });
-          return;
-        }
-
-        setLoading(true);
-        try {
-          const totalAssetsValue = totalAssets ? parseFloat(totalAssets) : null;
-          let totalCostSum = 0;
-          const stockData = stockEntries.map((entry) => {
-            const stockCode = entry.stockCode.trim().toUpperCase();
-            const buyPrice = parseFloat(entry.buyPrice);
-            let quantity, buyPercentage;
-
-            if (entry.quantityInput.endsWith('%')) {
-              if (!totalAssetsValue) throw new Error(`股票 ${entry.id} 使用百分比時必須輸入總資產金額！`);
-              buyPercentage = parseFloat(entry.quantityInput.replace(/%/, ''));
-              const buyAmount = totalAssetsValue * (buyPercentage / 100);
-              quantity = Math.floor(buyAmount / buyPrice);
-            } else {
-              quantity = parseInt(entry.quantityInput);
-              buyPercentage = totalAssetsValue ? (quantity * buyPrice / totalAssetsValue * 100).toFixed(2) : null;
-            }
-
-            const predictPrice = parseFloat(entry.predictPrice);
-            const stopLossPrice = parseFloat(entry.stopLossPrice);
-            const addPositionPrice = parseFloat(entry.addPositionPrice);
-            let addPositionAmount, addPositionPercentage;
-
-            if (entry.addPositionMethod === '1') {
-              addPositionAmount = parseFloat(entry.addPositionInput);
-              addPositionPercentage = totalAssetsValue ? (addPositionAmount / totalAssetsValue * 100).toFixed(2) : null;
-            } else {
-              if (!totalAssetsValue) throw new Error(`股票 ${entry.id} 使用總資產百分比時必須輸入總資產金額！`);
-              addPositionPercentage = parseFloat(entry.addPositionInput);
-              addPositionAmount = (totalAssetsValue * (addPositionPercentage / 100)).toFixed(2);
-            }
-
-            const totalCost = (buyPrice * quantity).toFixed(2);
-            totalCostSum += parseFloat(totalCost);
-
-            if (totalAssetsValue && totalCostSum > totalAssetsValue) {
-              throw new Error(`股票 ${entry.id} 初始買入總成本超過總資產金額！`);
-            }
-
-            const remainingAssets = totalAssetsValue ? (totalAssetsValue - totalCostSum).toFixed(2) : null;
-            if (totalAssetsValue && parseFloat(addPositionAmount) > parseFloat(remainingAssets)) {
-              throw new Error(`股票 ${entry.id} 補倉金額超過剩餘總資產！`);
-            }
-
-            const profitsAmount = ((predictPrice - buyPrice) * quantity).toFixed(2);
-            const profitsPercentage = totalAssetsValue ? (profitsAmount / totalAssetsValue * 100).toFixed(2) : null;
-            const lossAmount = ((buyPrice - stopLossPrice) * quantity).toFixed(2);
-            const lossPercentage = totalAssetsValue ? (lossAmount / totalAssetsValue * 100).toFixed(2) : null;
-            const lossAmount2 = ((buyPrice - addPositionPrice) * quantity).toFixed(2);
-            const lossPercentage2 = totalAssetsValue ? (lossAmount2 / totalAssetsValue * 100).toFixed(2) : null;
-            const purchaseRatio = totalAssetsValue ? (totalCost / totalAssetsValue * 100).toFixed(2) : null;
-            const addPositionQuantity = Math.floor(addPositionAmount / addPositionPrice);
-
-            return {
-              totalAssets: totalAssetsValue,
-              stockCode,
-              buyPrice,
-              quantity,
-              buyPercentage,
-              predictPrice,
-              stopLossPrice,
-              addPositionPrice,
-              addPositionAmount,
-              addPositionPercentage,
-              profitsAmount,
-              profitsPercentage,
-              lossAmount,
-              lossPercentage,
-              lossAmount2,
-              lossPercentage2,
-              purchaseRatio,
-              addPositionQuantity,
-              remainingAssets,
-              totalCost,
-            };
-          });
-
-          onCalculate(stockData);
-        } catch (e) {
-          setErrors({ ...errors, general: `輸入錯誤！${e.message}` });
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      return (
-        <div className="flex flex-col items-center h-screen bg-gray-100 p-4">
-          <div className="flex justify-between w-full mb-4">
-            <button className="text-2xl text-gray-600 icon-hover" aria-label="開啟選單">
-              <i className="fas fa-bars"></i>
-            </button>
-            <h1 className="text-xl font-bold">ALL IN - 股票計算器</h1>
-            <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
-          </div>
-          <div className="w-full bg-black text-white p-4 rounded-lg mb-4">
-            <p className="text-sm">帳戶餘額</p>
-            <div className="flex justify-between">
-              <p className="text-2xl font-bold">HKD $10000</p>
-              <p className="text-green-500 text-2xl font-bold">+$120</p>
-            </div>
-          </div>
-          <div className="flex w-full justify-end mb-4">
-            <button
-              onClick={onBackClick}
-              className="bg-black text-white font-bold py-2 px-4 rounded-full hover:bg-gray-800 animate-btn"
-              aria-label="返回主畫面"
-            >
-              返回
-            </button>
-          </div>
-          <div className="max-w-lg w-full p-6 bg-white shadow-lg rounded-lg">
-            <h1 className="text-2xl font-bold text-center text-gray-800 mb-4">股票盈虧計算器</h1>
-            {loading && <div className="text-center text-gray-500 mb-4 animate-pulse">載入中...</div>}
-            <div className="mb-4">
-              <label htmlFor="totalAssets" className="block font-bold text-gray-700 mb-1">總資產金額 (選填)</label>
-              <input
-                type="number"
-                id="totalAssets"
-                step="0.01"
-                min="0"
-                value={totalAssets}
-                onChange={(e) => {
-                  setTotalAssets(e.target.value);
-                  validateInput('totalAssets', e.target.value, 1);
-                }}
-                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-                placeholder="輸入總資產金額（HKD）"
-              />
-              <div className="error-message" style={{ display: errors['totalAssets'] ? 'block' : 'none' }}>
-                {errors['totalAssets']}
-              </div>
-            </div>
-            <div className="space-y-6">
-              {stockEntries.map((entry) => (
-                <div key={entry.id} className="stock-entry border p-4 rounded-lg bg-gray-50">
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="font-bold text-gray-700">股票 {entry.id}</h3>
-                    <button
-                      onClick={() => removeStockEntry(entry.id)}
-                      className="text-red-500 hover:text-red-700"
-                      aria-label={`移除股票 ${entry.id}`}
-                    >
-                      <i className="fas fa-trash-alt"></i>
-                    </button>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="mb-2">
-                      <label htmlFor={`stockCode_${entry.id}`} className="block font-bold text-gray-700 mb-1">股票代碼</label>
-                      <input
-                        type="text"
-                        id={`stockCode_${entry.id}`}
-                        value={entry.stockCode}
-                        onChange={(e) => updateStockEntry(entry.id, 'stockCode', e.target.value)}
-                        required
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-                        placeholder="例如: AAPL"
-                      />
-                      <div className="error-message" style={{ display: errors[`stockCode_${entry.id}`] ? 'block' : 'none' }}>
-                        {errors[`stockCode_${entry.id}`]}
-                      </div>
-                    </div>
-                    <div className="mb-2">
-                      <label htmlFor={`buyPrice_${entry.id}`} className="block font-bold text-gray-700 mb-1">買入價格 ($)</label>
-                      <input
-                        type="number"
-                        id={`buyPrice_${entry.id}`}
-                        step="0.01"
-                        min="0"
-                        value={entry.buyPrice}
-                        onChange={(e) => updateStockEntry(entry.id, 'buyPrice', e.target.value)}
-                        required
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-                        placeholder="輸入買入價格"
-                      />
-                      <div className="error-message" style={{ display: errors[`buyPrice_${entry.id}`] ? 'block' : 'none' }}>
-                        {errors[`buyPrice_${entry.id}`]}
-                      </div>
-                    </div>
-                    <div className="mb-2">
-                      <label htmlFor={`quantityInput_${entry.id}`} className="block font-bold text-gray-700 mb-1">買入數量 (股數或%)</label>
-                      <input
-                        type="text"
-                        id={`quantityInput_${entry.id}`}
-                        value={entry.quantityInput}
-                        onChange={(e) => updateStockEntry(entry.id, 'quantityInput', e.target.value)}
-                        required
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-                        placeholder="例如: 100 或 10%"
-                      />
-                      <div className="error-message" style={{ display: errors[`quantityInput_${entry.id}`] ? 'block' : 'none' }}>
-                        {errors[`quantityInput_${entry.id}`]}
-                      </div>
-                    </div>
-                    <div className="mb-2">
-                      <label htmlFor={`predictPrice_${entry.id}`} className="block font-bold text-gray-700 mb-1">止盈價格 ($)</label>
-                      <input
-                        type="number"
-                        id={`predictPrice_${entry.id}`}
-                        step="0.01"
-                        min="0"
-                        value={entry.predictPrice}
-                        onChange={(e) => updateStockEntry(entry.id, 'predictPrice', e.target.value)}
-                        required
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-                        placeholder="輸入止盈價格"
-                      />
-                      <div className="error-message" style={{ display: errors[`predictPrice_${entry.id}`] ? 'block' : 'none' }}>
-                        {errors[`predictPrice_${entry.id}`]}
-                      </div>
-                    </div>
-                    <div className="mb-2">
-                      <label htmlFor={`stopLossPrice_${entry.id}`} className="block font-bold text-gray-700 mb-1">止損價格 ($)</label>
-                      <input
-                        type="number"
-                        id={`stopLossPrice_${entry.id}`}
-                        step="0.01"
-                        min="0"
-                        value={entry.stopLossPrice}
-                        onChange={(e) => updateStockEntry(entry.id, 'stopLossPrice', e.target.value)}
-                        required
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-                        placeholder="輸入止損價格"
-                      />
-                      <div className="error-message" style={{ display: errors[`stopLossPrice_${entry.id}`] ? 'block' : 'none' }}>
-                        {errors[`stopLossPrice_${entry.id}`]}
-                      </div>
-                    </div>
-                    <div className="mb-2">
-                      <label htmlFor={`addPositionPrice_${entry.id}`} className="block font-bold text-gray-700 mb-1">補倉價格 ($)</label>
-                      <input
-                        type="number"
-                        id={`addPositionPrice_${entry.id}`}
-                        step="0.01"
-                        min="0"
-                        value={entry.addPositionPrice}
-                        onChange={(e) => updateStockEntry(entry.id, 'addPositionPrice', e.target.value)}
-                        required
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-                        placeholder="輸入補倉價格"
-                      />
-                      <div className="error-message" style={{ display: errors[`addPositionPrice_${entry.id}`] ? 'block' : 'none' }}>
-                        {errors[`addPositionPrice_${entry.id}`]}
-                      </div>
-                    </div>
-                    <div className="mb-2">
-                      <label htmlFor={`addPositionMethod_${entry.id}`} className="block font-bold text-gray-700 mb-1">補倉金額輸入方式</label>
-                      <select
-                        id={`addPositionMethod_${entry.id}`}
-                        value={entry.addPositionMethod}
-                        onChange={(e) => {
-                          updateStockEntry(entry.id, 'addPositionMethod', e.target.value);
-                          updateStockEntry(entry.id, 'addPositionInput', '');
-                        }}
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-                      >
-                        <option value="1">具體金額</option>
-                        <option value="2" disabled={!totalAssets}>總資產百分比</option>
-                      </select>
-                    </div>
-                    <div className="mb-2">
-                      <label htmlFor={`addPositionInput_${entry.id}`} className="block font-bold text-gray-700 mb-1">
-                        {entry.addPositionMethod === '1' ? '補倉金額 ($)' : '補倉金額占比 (%)'}
-                      </label>
-                      <input
-                        type="number"
-                        id={`addPositionInput_${entry.id}`}
-                        step={entry.addPositionMethod === '1' ? '0.01' : '0.1'}
-                        min="0"
-                        value={entry.addPositionInput}
-                        onChange={(e) => updateStockEntry(entry.id, 'addPositionInput', e.target.value)}
-                        required
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-                        placeholder={entry.addPositionMethod === '1' ? '輸入補倉金額' : '輸入百分比 (0-100)'}
-                      />
-                      <div className="error-message" style={{ display: errors[`addPositionInput_${entry.id}`] ? 'block' : 'none' }}>
-                        {errors[`addPositionInput_${entry.id}`]}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mt-4">
-                    <button
-                      type="button"
-                      onClick={() => fillStock(entry.id)}
-                      className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 animate-btn"
-                    >
-                      <i className="fas fa-magic mr-2"></i>一鍵填入
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="flex justify-center gap-4 mt-6">
-              <button
-                type="button"
-                onClick={addStockEntry}
-                className="bg-teal-500 text-white px-4 py-2 rounded-lg hover:bg-teal-600 animate-btn"
-              >
-                <i className="fas fa-plus mr-2"></i>新增股票
-              </button>
-              <button
-                onClick={calculate}
-                className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 animate-btn"
-              >
-                <i className="fas fa-calculator mr-2"></i>計算並顯示結果
-              </button>
-            </div>
-            {errors.general && <div className="text-red-500 text-center mt-4 animate-pulse">{errors.general}</div>}
-          </div>
-          <div className="fixed bottom-0 w-full bg-white flex justify-around py-4 border-t">
-            <button onClick={onBackClick} className={`text-2xl ${currentScreen === 'main' ? 'text-teal-500' : 'text-gray-600'} icon-hover`} aria-label="首頁">
-              <i className="fas fa-home"></i>
-            </button>
-            <button className="text-2xl text-gray-600 icon-hover" aria-label="搜尋">
-              <i className="fas fa-search"></i>
-            </button>
-            <button className="text-2xl text-gray-600 icon-hover" aria-label="交易">
-              <i className="fas fa-exchange-alt"></i>
-            </button>
-            <button className="text-2xl text-gray-600 icon-hover" aria-label="支付">
-              <i className="fas fa-credit-card"></i>
-            </button>
-          </div>
-        </div>
-      );
-    };
-
-    // 股票計算器結果組件（優化 UI）
-    const StockCalculatorResult = ({ onBackClick, onInputClick, stockData, currentScreen }) => {
-      const exportToCSV = () => {
-        let csvContent = '總資產金額,股票代碼,買入價格,買入數量,買入占比,總成本,剩餘總資產,止盈價格,盈利金額,盈利總占比,止損價格,虧損金額,虧損總占比,補倉價格,補倉虧損金額,補倉虧損總占比,補倉金額,補倉數量\n';
-        stockData.forEach((stock) => {
-          csvContent += `${stock.totalAssets || ''},${stock.stockCode},${stock.buyPrice},${stock.quantity},${stock.buyPercentage || ''},${stock.totalCost},${stock.remainingAssets || ''},${stock.predictPrice},${stock.profitsAmount},${stock.profitsPercentage || ''},${stock.stopLossPrice},${stock.lossAmount},${stock.lossPercentage || ''},${stock.addPositionPrice},${stock.lossAmount2},${stock.lossPercentage2 || ''},${stock.addPositionAmount},${stock.addPositionQuantity}\n`;
-        });
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'stock_results.csv';
-        a.click();
-        URL.revokeObjectURL(url);
-      };
-
-      return (
-        <div className="flex flex-col items-center h-screen bg-gray-100 p-4">
-          <div className="flex justify-between w-full mb-4">
-            <button className="text-2xl text-gray-600 icon-hover" aria-label="開啟選單">
-              <i className="fas fa-bars"></i>
-            </button>
-            <h1 className="text-xl font-bold">ALL IN - 股票計算結果</h1>
-            <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
-          </div>
-          <div className="w-full bg-black text-white p-4 rounded-lg mb-4">
-            <p className="text-sm">帳戶餘額</p>
-            <div className="flex justify-between">
-              <p className="text-2xl font-bold">HKD $10000</p>
-              <p className="text-green-500 text-2xl font-bold">+$120</p>
-            </div>
-          </div>
-          <div className="flex w-full justify-end mb-4">
-            <button
-              onClick={onBackClick}
-              className="bg-black text-white font-bold py-2 px-4 rounded-full hover:bg-gray-800 animate-btn"
-              aria-label="返回主畫面"
-            >
-              返回
-            </button>
-          </div>
-          <div className="max-w-lg w-full p-6 bg-white shadow-lg rounded-lg">
-            <h1 className="text-2xl font-bold text-center text-gray-800 mb-4">股票計算結果</h1>
-            <div className="space-y-4">
-              {stockData.map((stock, index) => {
-                const currentAssets = stock.totalAssets
-                  ? (parseFloat(stock.totalAssets) - parseFloat(stock.lossAmount)).toFixed(2)
-                  : null;
-                return (
-                  <div key={index} className="result-section">
-                    <div className="result-item font-bold text-lg">股票 {index + 1} - {stock.stockCode}</div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {stock.totalAssets && <div className="result-item">總資產金額: <span className="font-semibold">${stock.totalAssets.toFixed(2)}</span></div>}
-                      <div className="result-item">股票代碼: <span className="font-semibold">{stock.stockCode}</span></div>
-                      <div className="result-item">買入價格: <span className="font-semibold">${stock.buyPrice.toFixed(2)}</span></div>
-                      <div className="result-item">買入數量: <span className="font-semibold">{stock.quantity} 股</span></div>
-                      {stock.purchaseRatio && <div className="result-item">買入占比: <span className="font-semibold">{stock.purchaseRatio}%</span></div>}
-                      <div className="result-item">總成本: <span className="font-semibold">${stock.totalCost}</span></div>
-                      {stock.remainingAssets && <div className="result-item">剩餘總資產: <span className="font-semibold">${stock.remainingAssets}</span></div>}
-                      <div className="result-item">止盈價格: <span className="font-semibold">${stock.predictPrice.toFixed(2)}</span></div>
-                      <div className="result-item">
-                        盈利金額: <span className="highlight">${stock.profitsAmount}</span>
-                        {stock.profitsPercentage && `, 占比: <span className="highlight">${stock.profitsPercentage}%</span>`}
-                      </div>
-                      <div className="result-item">止損價格: <span className="font-semibold">${stock.stopLossPrice.toFixed(2)}</span></div>
-                      <div className="result-item">
-                        虧損金額: <span className="negative">${stock.lossAmount}</span> (止損)
-                        {stock.lossPercentage && `, 占比: <span className="negative">${stock.lossPercentage}%</span>`}
-                      </div>
-                      <div className="result-item">補倉價格: <span className="font-semibold">${stock.addPositionPrice.toFixed(2)}</span></div>
-                      <div className="result-item">
-                        補倉虧損: <span className="negative">${stock.lossAmount2}</span>
-                        {stock.lossPercentage2 && `, 占比: <span className="negative">${stock.lossPercentage2}%</span>`}
-                      </div>
-                      <div className="result-item">補倉金額: <span className="font-semibold">${stock.addPositionAmount}</span></div>
-                      <div className="result-item">補倉數量: <span className="font-semibold">{stock.addPositionQuantity} 股</span></div>
-                      {currentAssets && (
-                        <div className="result-item">
-                          當前總資產: <span className="font-semibold">${currentAssets}</span> (止損), 占比: <span className="font-semibold">{((currentAssets / stock.totalAssets) * 100).toFixed(2)}%</span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="mt-3">
-                      <button
-                        onClick={() => window.open(`https://www.tradingview.com/symbols/${stock.stockCode}`, '_blank')}
-                        className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 animate-btn"
-                      >
-                        <i className="fas fa-chart-line mr-2"></i>查看 {stock.stockCode} 在 TradingView
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="flex justify-center gap-4 mt-6">
-              <button
-                onClick={onInputClick}
-                className="bg-teal-500 text-white px-4 py-2 rounded-lg hover:bg-teal-600 animate-btn"
-              >
-                <i className="fas fa-arrow-left mr-2"></i>返回輸入頁面
-              </button>
-              <button
-                onClick={exportToCSV}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 animate-btn"
-              >
-                <i className="fas fa-download mr-2"></i>匯出為 CSV
-              </button>
-            </div>
-          </div>
-          <div className="fixed bottom-0 w-full bg-white flex justify-around py-4 border-t">
-            <button onClick={onBackClick} className={`text-2xl ${currentScreen === 'main' ? 'text-teal-500' : 'text-gray-600'} icon-hover`} aria-label="首頁">
-              <i className="fas fa-home"></i>
-            </button>
-            <button className="text-2xl text-gray-600 icon-hover" aria-label="搜尋">
-              <i className="fas fa-search"></i>
-            </button>
-            <button className="text-2xl text-gray-600 icon-hover" aria-label="交易">
-              <i className="fas fa-exchange-alt"></i>
-            </button>
-            <button className="text-2xl text-gray-600 icon-hover" aria-label="支付">
-              <i className="fas fa-credit-card"></i>
-            </button>
-          </div>
         </div>
       );
     };
@@ -983,56 +227,18 @@
     // 主應用程式組件
     const App = () => {
       const [screen, setScreen] = useState('main');
-      const [stockData, setStockData] = useState([]);
 
-      const handleShopClick = () => setScreen('shop');
-      const handleGamesClick = () => setScreen('games');
       const handleCalendarClick = () => setScreen('calendar');
-      const handleStockClick = () => setScreen('stockInput');
+      const handleCarClick = () => setScreen('car');
       const handleBackClick = () => setScreen('main');
-      const handleCalculate = (data) => {
-        setStockData(data);
-        setScreen('stockResult');
-      };
-      const handleInputClick = () => {
-        setStockData([]);
-        setScreen('stockInput');
-      };
 
       return (
         <div>
           {screen === 'main' && (
-            <MainScreen
-              onShopClick={handleShopClick}
-              onGamesClick={handleGamesClick}
-              onCalendarClick={handleCalendarClick}
-              currentScreen={screen}
-            />
+            <MainScreen onCalendarClick={handleCalendarClick} onCarClick={handleCarClick} />
           )}
-          {screen === 'shop' && (
-            <ShopScreen
-              onBackClick={handleBackClick}
-              onStockClick={handleStockClick}
-              currentScreen={screen}
-            />
-          )}
-          {screen === 'games' && <GamesScreen onBackClick={handleBackClick} currentScreen={screen} />}
-          {screen === 'calendar' && <CalendarScreen onBackClick={handleBackClick} currentScreen={screen} />}
-          {screen === 'stockInput' && (
-            <StockCalculatorInput
-              onBackClick={handleBackClick}
-              onCalculate={handleCalculate}
-              currentScreen={screen}
-            />
-          )}
-          {screen === 'stockResult' && (
-            <StockCalculatorResult
-              onBackClick={handleBackClick}
-              onInputClick={handleInputClick}
-              stockData={stockData}
-              currentScreen={screen}
-            />
-          )}
+          {screen === 'car' && <CarScreen onBackClick={handleBackClick} />}
+          {screen === 'calendar' && <CalendarScreen onBackClick={handleBackClick} />}
         </div>
       );
     };
