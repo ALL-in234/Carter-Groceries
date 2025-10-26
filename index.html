@@ -88,7 +88,7 @@
       </div>
     );
 
-   // 汽車畫面組件
+    // 汽車畫面組件
 const CarScreen = ({ onBackClick }) => (
   <div className="flex flex-col items-center h-screen bg-white p-4">
     <div className="flex justify-between w-full mb-4">
@@ -131,6 +131,34 @@ const CarScreen = ({ onBackClick }) => (
         />
         <div className="flex justify-between items-center">
           <button className="price-button">HK $15000</button>
+          <button className="details-button" onClick={() => alert('查看 BMW 詳情')}>Details</button>
+        </div>
+      </div>
+    </div>
+    <div className="w-full mb-4">
+      <div className="relative">
+        <img
+          src="image/ac2234_n.jpg"
+          alt="ac2234_n Car"
+          className="car-image mb-2"
+          onError={(e) => { e.target.src = 'https://via.placeholder.com/300x200'; }} // 圖片載入失敗時使用占位符
+        />
+        <div className="flex justify-between items-center">
+          <button className="price-button">HK $12000</button>
+          <button className="details-button" onClick={() => alert('查看 BMW 詳情')}>Details</button>
+        </div>
+      </div>
+    </div>
+    <div className="w-full mb-4">
+      <div className="relative">
+        <img
+          src="image/zz1177.jpg"
+          alt="zz1177 Car"
+          className="car-image mb-2"
+          onError={(e) => { e.target.src = 'https://via.placeholder.com/300x200'; }} // 圖片載入失敗時使用占位符
+        />
+        <div className="flex justify-between items-center">
+          <button className="price-button">HK $20000</button>
           <button className="details-button" onClick={() => alert('查看 BMW 詳情')}>Details</button>
         </div>
       </div>
@@ -257,3 +285,4 @@ const CarScreen = ({ onBackClick }) => (
   </script>
 </body>
 </html>
+
