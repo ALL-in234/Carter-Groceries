@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     .icon-hover:hover {
-      color: #3b82f6; /* Tailwind blue-500 */
+      color: #3b82f6;
       transform: scale(1.1);
       transition: all 0.2s ease;
     }
@@ -28,7 +28,35 @@
       font-weight: bold;
     }
     .details-button {
-      background-color: #00ced1;
+      background-color: #2ED3C0;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: bold;
+    }
+    .pagination-button {
+      background-color: #4b5563;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 5px;
+      margin: 0 4px;
+    }
+    .pagination-button:hover {
+      background-color: #6b7280;
+    }
+    .pagination-button.active {
+      background-color: #3b82f6;
+    }
+    .action-button {
+      background-color: #2ED3C0;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    .email-button {
+      background-color: #007BFF;
       color: #fff;
       padding: 10px 20px;
       border-radius: 10px;
@@ -43,13 +71,13 @@
     const { useState, useEffect } = React;
 
     // 主畫面組件
-    const MainScreen = ({ onCalendarClick, onCarClick }) => (
+    const MainScreen = ({ onCarClick }) => (
       <div className="flex flex-col items-center h-screen bg-gray-100 p-4">
         <div className="flex justify-between w-full mb-4">
           <button className="text-2xl text-gray-600 icon-hover" aria-label="開啟選單">
             <i className="fas fa-bars"></i>
           </button>
-          <h1 className="text-xl font-bold">ALL IN</h1>
+          <h1 className="text-xl font-bold">Carter-Groceries</h1>
           <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
         </div>
         <div className="grid grid-cols-2 gap-4 w-full mb-4">
@@ -76,187 +104,124 @@
             <i className="fas fa-paw mr-2"></i> 寵物
           </button>
         </div>
-        <div className="absolute bottom-16">
-          <button
-            onClick={onCalendarClick}
-            className="bg-teal-500 text-white text-2xl w-12 h-12 rounded-full flex items-center justify-center hover:bg-teal-600 hover:scale-110 transition-transform duration-200"
-            aria-label="新增事件"
-          >
-            <i className="fas fa-plus"></i>
-          </button>
-        </div>
       </div>
     );
 
     // 汽車畫面組件
-const CarScreen = ({ onBackClick }) => (
-  <div className="flex flex-col items-center h-screen bg-white p-4">
-    <div className="flex justify-between w-full mb-4">
-      <button className="text-2xl text-gray-600 icon-hover" aria-label="開啟選單">
-        <i className="fas fa-bars"></i>
-      </button>
-      <h1 className="text-xl font-bold">Car</h1>
-      <div className="flex flex-col items-center">
-        <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
-        <button
-          onClick={onBackClick}
-          className="bg-teal-500 text-white text-lg w-8 h-8 rounded-full flex items-center justify-center mt-2 hover:bg-teal-600 hover:scale-110 transition-transform duration-200"
-          aria-label="返回主畫面"
-        >
-          <i className="fas fa-arrow-left"></i>
-        </button>
-      </div>
-    </div>
-    <div className="w-full mb-4">
-      <div className="relative">
-        <img
-          src="image/car-tesla.jpg"
-          alt="Tesla Car"
-          className="car-image mb-2"
-          onError={(e) => { e.target.src = 'https://via.placeholder.com/300x200'; }} // 圖片載入失敗時使用占位符
-        />
-        <div className="flex justify-between items-center">
-          <button className="price-button">HK $10000</button>
-          <button className="details-button" onClick={() => alert('查看 Tesla 詳情')}>Details</button>
-        </div>
-      </div>
-    </div>
-    <div className="w-full mb-4">
-      <div className="relative">
-        <img
-          src="image/car-benz.jpg"
-          alt="BMW Car"
-          className="car-image mb-2"
-          onError={(e) => { e.target.src = 'https://via.placeholder.com/300x200'; }} // 圖片載入失敗時使用占位符
-        />
-        <div className="flex justify-between items-center">
-          <button className="price-button">HK $15000</button>
-          <button className="details-button" onClick={() => alert('查看 BMW 詳情')}>Details</button>
-        </div>
-      </div>
-    </div>
-    <div className="w-full mb-4">
-      <div className="relative">
-        <img
-          src="image/ac2234_n.jpg"
-          alt="ac2234_n Car"
-          className="car-image mb-2"
-          onError={(e) => { e.target.src = 'https://via.placeholder.com/300x200'; }} // 圖片載入失敗時使用占位符
-        />
-        <div className="flex justify-between items-center">
-          <button className="price-button">HK $12000</button>
-          <button className="details-button" onClick={() => alert('查看 BMW 詳情')}>Details</button>
-        </div>
-      </div>
-    </div>
-    <div className="w-full mb-4">
-      <div className="relative">
-        <img
-          src="image/zz1177.jpg"
-          alt="zz1177 Car"
-          className="car-image mb-2"
-          onError={(e) => { e.target.src = 'https://via.placeholder.com/300x200'; }} // 圖片載入失敗時使用占位符
-        />
-        <div className="flex justify-between items-center">
-          <button className="price-button">HK $20000</button>
-          <button className="details-button" onClick={() => alert('查看 BMW 詳情')}>Details</button>
-        </div>
-      </div>
-    </div>
-  </div>
-);
-    // 日曆畫面組件
-    const CalendarScreen = ({ onBackClick }) => {
-      const [focusedDate, setFocusedDate] = useState(new Date());
-      const [selectedDate, setSelectedDate] = useState(new Date());
-      const today = new Date();
+    const CarScreen = ({ onBackClick, onDetailsClick }) => {
+      const [currentPage, setCurrentPage] = useState(1);
+      const carsPerPage = 4;
+      
+      // 汽車資料
+      const cars = [
+        { src: "image/car-tesla.jpg", alt: "Tesla Car", price: "HK $10000", details: { plate: "xxxxx", year: 2023, seats: 4, km: 23000 } },
+        { src: "image/car-benz.jpg", alt: "BMW Car", price: "HK $15000", details: { plate: "yyyyy", year: 2022, seats: 5, km: 18000 } },
+        { src: "image/ac2234_n.jpg", alt: "ac2234_n Car", price: "HK $12000", details: { plate: "zzzzz", year: 2021, seats: 4, km: 25000 } },
+        { src: "image/zz1177.jpg", alt: "zz1177 Car", price: "HK $20000", details: { plate: "wwwww", year: 2020, seats: 6, km: 30000 } },
+        { src: "image/ok1277.jpg", alt: "ok1277 Car", price: "HK $13000", details: { plate: "aaaaa", year: 2019, seats: 5, km: 22000 } },
+      ];
 
-      const firstDayOfMonth = new Date(focusedDate.getFullYear(), focusedDate.getMonth(), 1);
-      const lastDayOfMonth = new Date(focusedDate.getFullYear(), focusedDate.getMonth() + 1, 0);
-      const firstDayWeekday = firstDayOfMonth.getDay();
+      // 計算當前頁面的汽車
+      const indexOfLastCar = currentPage * carsPerPage;
+      const indexOfFirstCar = indexOfLastCar - carsPerPage;
+      const currentCars = cars.slice(indexOfFirstCar, indexOfLastCar);
 
-      const previousMonth = () => {
-        setFocusedDate(new Date(focusedDate.getFullYear(), focusedDate.getMonth() - 1, 1));
+      // 計算總頁數
+      const totalPages = Math.ceil(cars.length / carsPerPage);
+
+      // 分頁按鈕點擊處理
+      const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
       };
-
-      const nextMonth = () => {
-        setFocusedDate(new Date(focusedDate.getFullYear(), focusedDate.getMonth() + 1, 1));
-      };
-
-      const selectDate = (date) => {
-        setSelectedDate(date);
-      };
-
-      const addEvent = () => {
-        if (selectedDate.getTime() === new Date(0).getTime()) {
-          alert('請先選擇一個日期');
-        } else {
-          alert(`添加事件到 ${selectedDate.getDate()}日`);
-        }
-      };
-
-      const days = [];
-      for (let i = 0; i < firstDayWeekday; i++) {
-        days.push(<div key={`empty-${i}`} className="p-2"></div>);
-      }
-
-      for (let day = 1; day <= lastDayOfMonth.getDate(); day++) {
-        const currentDate = new Date(focusedDate.getFullYear(), focusedDate.getMonth(), day);
-        const isSelected = currentDate.toDateString() === selectedDate.toDateString();
-        const isToday = currentDate.toDateString() === today.toDateString();
-
-        days.push(
-          <div
-            key={day}
-            onClick={() => selectDate(currentDate)}
-            className={`p-2 text-center cursor-pointer rounded-full ${
-              isSelected ? 'bg-blue-200 font-bold' : ''
-            } ${isToday ? 'border-2 border-red-500 rounded-full' : ''} hover:bg-blue-100 transition-colors`}
-            role="button"
-            aria-label={`選擇 ${focusedDate.getMonth() + 1}月 ${day}日`}
-          >
-            {day}
-          </div>
-        );
-      }
 
       return (
-        <div className="flex flex-col items-center h-screen bg-[#B2E4C9] p-4">
+        <div className="flex flex-col items-center h-screen bg-white p-4">
           <div className="flex justify-between w-full mb-4">
             <button className="text-2xl text-gray-600 icon-hover" aria-label="開啟選單">
               <i className="fas fa-bars"></i>
             </button>
-            <h1 className="text-xl font-bold">ALL IN</h1>
-            <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+            <h1 className="text-xl font-bold">Car</h1>
+            <div className="flex flex-col items-center">
+              <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+              <button
+                onClick={onBackClick}
+                className="bg-teal-500 text-white text-lg w-8 h-8 rounded-full flex items-center justify-center mt-2 hover:bg-teal-600 hover:scale-110 transition-transform duration-200"
+                aria-label="返回主畫面"
+              >
+                <i className="fas fa-arrow-left"></i>
+              </button>
+            </div>
           </div>
-          <div className="w-full bg-white p-4 rounded-lg shadow mb-4">
-            <div className="flex justify-between mb-4">
-              <span className="text-lg font-bold">{`${focusedDate.getMonth() + 1}月 ${focusedDate.getFullYear()}`}</span>
-              <div>
-                <button onClick={previousMonth} className="text-2xl text-gray-600 icon-hover mr-2" aria-label="上個月">
-                  <i className="fas fa-chevron-left"></i>
-                </button>
-                <button onClick={nextMonth} className="text-2xl text-gray-600 icon-hover" aria-label="下個月">
-                  <i className="fas fa-chevron-right"></i>
-                </button>
+          {currentCars.map((car, index) => (
+            <div key={index} className="w-full mb-4">
+              <div className="relative">
+                <img
+                  src={car.src}
+                  alt={car.alt}
+                  className="car-image mb-2"
+                  onError={(e) => { e.target.src = 'https://via.placeholder.com/300x200'; }}
+                />
+                <div className="flex justify-between items-center">
+                  <button className="price-button">{car.price}</button>
+                  <button
+                    className="details-button"
+                    onClick={() => onDetailsClick(car)}
+                  >
+                    Details
+                  </button>
+                </div>
               </div>
             </div>
-            <div className="grid grid-cols-7 text-center mb-2">
-              {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => (
-                <div key={index} className="font-bold">{day}</div>
-              ))}
-            </div>
-            <div className="grid grid-cols-7 text-center">{days}</div>
+          ))}
+          <div className="flex justify-center mt-4">
+            {Array.from({ length: totalPages }, (_, index) => (
+              <button
+                key={index + 1}
+                onClick={() => handlePageChange(index + 1)}
+                className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
+              >
+                {index + 1}
+              </button>
+            ))}
           </div>
-          <div className="absolute bottom-16">
-            <button
-              onClick={addEvent}
-              className="bg-gray-300 text-black text-2xl w-12 h-12 rounded-full flex items-center justify-center hover:bg-gray-400 hover:scale-110 transition-transform duration-200"
-              aria-label="新增事件"
-            >
-              <i className="fas fa-plus"></i>
+        </div>
+      );
+    };
+
+    // 汽車細節畫面組件
+    const CarDetailsScreen = ({ onBackClick, car }) => {
+      return (
+        <div className="flex flex-col items-center h-screen bg-white p-4">
+          <div className="flex justify-between w-full mb-4">
+            <button className="text-2xl text-gray-600 icon-hover" aria-label="開啟選單">
+              <i className="fas fa-bars"></i>
             </button>
+            <h1 className="text-xl font-bold">Carter-Groceries</h1>
+            <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
           </div>
+          <img
+            src={car.src}
+            alt={car.alt}
+            className="car-image mb-2"
+          />
+          <div className="price-button">{car.price}</div>
+          <div className="mt-2">
+            <p>License Plate Number: {car.details.plate}</p>
+            <p>Product Year: {car.details.year}</p>
+            <p>Seats: {car.details.seats}</p>
+            <p>KM: {car.details.km} About</p>
+          </div>
+          <div className="flex mt-4">
+            <button className="action-button">WTS</button>
+            <button className="email-button">Email</button>
+          </div>
+          <button
+            onClick={onBackClick}
+            className="bg-teal-500 text-white text-lg w-8 h-8 rounded-full flex items-center justify-center mt-4 hover:bg-teal-600 hover:scale-110 transition-transform duration-200"
+            aria-label="返回汽車畫面"
+          >
+            <i className="fas fa-arrow-left"></i>
+          </button>
         </div>
       );
     };
@@ -264,18 +229,26 @@ const CarScreen = ({ onBackClick }) => (
     // 主應用程式組件
     const App = () => {
       const [screen, setScreen] = useState('main');
+      const [selectedCar, setSelectedCar] = useState(null);
 
-      const handleCalendarClick = () => setScreen('calendar');
       const handleCarClick = () => setScreen('car');
       const handleBackClick = () => setScreen('main');
+      const handleDetailsBackClick = () => setScreen('car');
+      const handleDetailsClick = (car) => {
+        setSelectedCar(car);
+        setScreen('details');
+      };
 
       return (
         <div>
-          {screen === 'main' && (
-            <MainScreen onCalendarClick={handleCalendarClick} onCarClick={handleCarClick} />
+          {screen === 'main' && <MainScreen onCarClick={handleCarClick} />}
+          {screen === 'car' && <CarScreen onBackClick={handleBackClick} onDetailsClick={handleDetailsClick} />}
+          {screen === 'details' && (
+            <CarDetailsScreen
+              onBackClick={handleDetailsBackClick}
+              car={selectedCar}
+            />
           )}
-          {screen === 'car' && <CarScreen onBackClick={handleBackClick} />}
-          {screen === 'calendar' && <CalendarScreen onBackClick={handleBackClick} />}
         </div>
       );
     };
