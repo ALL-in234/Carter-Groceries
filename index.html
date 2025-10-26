@@ -22,14 +22,14 @@
     }
     .price-button {
       background-color: #000;
-      color: #00ff00;
-      padding: 10px 10px;
+      color: #8dffa0;
+      padding: 10px 20px;
       border-radius: 10px;
       font-weight: bold;
     }
     .details-button {
       background-color: #2ED3C0;
-      color: #fff;
+      color: #000000;
       padding: 10px 20px;
       border-radius: 10px;
       font-weight: bold;
@@ -62,11 +62,19 @@
       border-radius: 10px;
       font-weight: bold;
     }
-    .car-details {
-      text-align: left;
-      padding: 10px;
-      background-color: #f9f9f9;
-      border-radius: 5px;
+    .sell-box {
+      border: 1px solid #000;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 20px;
+      background-color: #fff;
+    }
+    .start-button {
+      background-color: #000;
+      color: #2ED3C0;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-weight: bold;
       margin-top: 10px;
     }
   </style>
@@ -117,12 +125,12 @@
     // 汽車畫面組件
     const CarScreen = ({ onBackClick, onDetailsClick }) => {
       const [currentPage, setCurrentPage] = useState(1);
-      const carsPerPage = 4;
+      const carsPerPage = 4; // 每次顯示一輛車，模擬圖片樣式
       
       // 汽車資料
       const cars = [
-        { src: "image/car-tesla.jpg", alt: "Tesla Car", price: "HK $10000", details: { plate: "xxxxx", year: 2023, seats: 4, km: 23000 } },
         { src: "image/car-benz.jpg", alt: "BMW Car", price: "HK $15000", details: { plate: "yyyyy", year: 2022, seats: 5, km: 18000 } },
+        { src: "image/car-tesla.jpg", alt: "Tesla Car", price: "HK $10000", details: { plate: "xxxxx", year: 2023, seats: 4, km: 23000 } },
         { src: "image/ac2234_n.jpg", alt: "ac2234_n Car", price: "HK $12000", details: { plate: "zzzzz", year: 2021, seats: 4, km: 25000 } },
         { src: "image/zz1177.jpg", alt: "zz1177 Car", price: "HK $20000", details: { plate: "wwwww", year: 2020, seats: 6, km: 30000 } },
         { src: "image/ok1277.jpg", alt: "ok1277 Car", price: "HK $13000", details: { plate: "aaaaa", year: 2019, seats: 5, km: 22000 } },
@@ -147,28 +155,23 @@
             <button className="text-2xl text-gray-600 icon-hover" aria-label="開啟選單">
               <i className="fas fa-bars"></i>
             </button>
-            <h1 className="text-xl font-bold">Car</h1>
-            <div className="flex flex-col items-center">
-              <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
-              <button
-                onClick={onBackClick}
-                className="bg-teal-500 text-white text-lg w-8 h-8 rounded-full flex items-center justify-center mt-2 hover:bg-teal-600 hover:scale-110 transition-transform duration-200"
-                aria-label="返回主畫面"
-              >
-                <i className="fas fa-arrow-left"></i>
-              </button>
-            </div>
+            <h1 className="text-xl font-bold">Carter-Groceries</h1>
+            <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+          </div>
+          <div className="sell-box w-full">
+            <h2 className="text-lg font-semibold">開始售賣你的產品</h2>
+            <button className="start-button mt-2">開始</button>
           </div>
           {currentCars.map((car, index) => (
-            <div key={index} className="w-full mb-4">
+            <div key={index} className="w-full mt-4">
               <div className="relative">
                 <img
                   src={car.src}
                   alt={car.alt}
-                  className="car-image mb-2"
+                  className="car-image"
                   onError={(e) => { e.target.src = 'https://via.placeholder.com/300x200'; }}
                 />
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center mt-2">
                   <button className="price-button">{car.price}</button>
                   <button
                     className="details-button"
