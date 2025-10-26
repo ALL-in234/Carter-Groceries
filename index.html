@@ -62,6 +62,13 @@
       border-radius: 10px;
       font-weight: bold;
     }
+    .car-details {
+      text-align: left;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -199,17 +206,19 @@
             <h1 className="text-xl font-bold">Carter-Groceries</h1>
             <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
           </div>
-          <img
-            src={car.src}
-            alt={car.alt}
-            className="car-image mb-2"
-          />
-          <div className="price-button">{car.price}</div>
-          <div className="mt-2">
-            <p>License Plate Number: {car.details.plate}</p>
-            <p>Product Year: {car.details.year}</p>
-            <p>Seats: {car.details.seats}</p>
-            <p>KM: {car.details.km} About</p>
+          <div className="relative w-full">
+            <img
+              src={car.src}
+              alt={car.alt}
+              className="car-image"
+            />
+            <div className="car-details">
+              <div className="price-button mb-2">{car.price}</div>
+              <p>License Plate Number: {car.details.plate}</p>
+              <p>Product Year: {car.details.year}</p>
+              <p>Seats: {car.details.seats}</p>
+              <p>KM: {car.details.km} About</p>
+            </div>
           </div>
           <div className="flex mt-4">
             <button className="action-button">WTS</button>
