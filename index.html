@@ -41,11 +41,7 @@
  const EntryScreen = ({ onEnterAsBuyer, onEnterAsAdmin }) => (
  <div className="flex flex-col h-screen bg-white px-6 pt-8">
  <div className="flex justify-between items-center text-xs text-gray-600 mb-4">
- <span>9:41</span>
  <div className="flex items-center space-x-1">
- <i className="fas fa-signal"></i>
- <i className="fas fa-wifi"></i>
- <i className="fas fa-battery-full"></i>
  </div>
  </div>
  <h1 className="text-2xl font-bold text-center mb-24">Carter-Groceries</h1>
@@ -192,8 +188,14 @@
  <div className="flex justify-between items-center p-4 bg-white shadow-sm">
  <button className="text-2xl text-gray-600 icon-hover"><i className="fas fa-bars"></i></button>
  <h1 className="text-xl font-bold text-gray-800">Carter-Groceries</h1>
- <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
- </div>
+            <button
+              onClick={onBackClick}
+              className="w-8 h-8 bg-teal-500 text-white rounded-full flex items-center justify-center shadow-md hover:bg-teal-600 hover:scale-110 transition-all duration-200"
+              aria-label="返回主畫面"
+            >
+              <i className="fas fa-home"></i>
+            </button>
+          </div>
  <div className="flex-1 overflow-y-auto pb-24 px-4">
  <div className="relative mt-4 mb-6 mx-auto max-w-sm">
  <img src={car.src} alt={car.alt} className="w-full h-56 object-cover rounded-2xl shadow-lg" />
@@ -250,8 +252,14 @@
  <div className="flex justify-between items-center p-4 bg-white shadow-sm">
  <button className="text-2xl text-gray-600 icon-hover"><i className="fas fa-bars"></i></button>
  <h1 className="text-xl font-bold text-gray-800">Carter-Groceries</h1>
- <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
- </div>
+ <button
+              onClick={onBackClick}
+              className="w-8 h-8 bg-teal-500 text-white rounded-full flex items-center justify-center shadow-md hover:bg-teal-600 hover:scale-110 transition-all duration-200"
+              aria-label="返回主畫面"
+            >
+              <i className="fas fa-home"></i>
+            </button>
+          </div>
  <div className="flex-1 overflow-y-auto px-4 pb-24">
  <div className="mt-4 mb-4">
  <img src={car.src} alt={car.alt} className="w-full h-48 object-cover rounded-xl shadow-md" />
@@ -338,11 +346,6 @@
  <p><span className="font-medium">送達時間：</span><span className="ml-2">{delivery}</span></p>
  <p><span className="font-medium">收貨地址：</span><span className="ml-2">{address}</span></p>
  <p><span className="font-medium">支付方式：</span><span className="ml-2">{payment}</span></p>
- </div>
- <div className="flex justify-center mt-8">
- <div className="w-20 h-20 bg-teal-100 rounded-full flex items-center justify-center animate-bounce">
- <i className="fas fa-check text-4xl text-teal-600"></i>
- </div>
  </div>
  </div>
  </div>
