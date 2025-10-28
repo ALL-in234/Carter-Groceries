@@ -77,6 +77,38 @@
       font-weight: bold;
       margin-top: 10px;
     }
+    /* 吸睛動畫效果 */
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.animate-ping {
+  animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-bounce {
+  animation: bounce 0.6s infinite;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.4s ease-out;
+}
+    
   </style>
 </head>
 <body>
@@ -122,205 +154,370 @@
     </div>
   );
 
-  // 汽車畫面組件
   const CarScreen = ({ onBackClick, onDetailsClick }) => {
-    const [currentPage, setCurrentPage] = useState(1);
-    const carsPerPage = 4;
+  const [currentPage, setCurrentPage] = useState(1);
+  const carsPerPage = 4;
 
-    const cars = [
-      { src: "image/car-benz.jpg", alt: "BMW Car", price: "HK $15000", details: { plate: "yyyyy", year: 2022, seats: 5, km: 18000 } },
-      { src: "image/car-tesla.jpg", alt: "Tesla Car", price: "HK $10000", details: { plate: "xxxxx", year: 2023, seats: 4, km: 23000 } },
-      { src: "image/ac2234_n.jpg", alt: "ac2234_n Car", price: "HK $12000", details: { plate: "zzzzz", year: 2021, seats: 4, km: 25000 } },
-      { src: "image/zz1177.jpg", alt: "zz1177 Car", price: "HK $20000", details: { plate: "wwwww", year: 2020, seats: 6, km: 30000 } },
-      { src: "image/ok1277.jpg", alt: "ok1277 Car", price: "HK $13000", details: { plate: "aaaaa", year: 2019, seats: 5, km: 22000 } },
-    ];
+  const cars = [
+    { src: "image/car-benz.jpg", alt: "BMW Car", price: "HK $15000", details: { plate: "yyyyy", year: 2022, seats: 5, km: 18000 } },
+    { src: "image/car-tesla.jpg", alt: "Tesla Car", price: "HK $10000", details: { plate: "xxxxx", year: 2023, seats: 4, km: 23000 } },
+    { src: "image/ac2234_n.jpg", alt: "ac2234_n Car", price: "HK $12000", details: { plate: "zzzzz", year: 2021, seats: 4, km: 25000 } },
+    { src: "image/zz1177.jpg", alt: "zz1177 Car", price: "HK $20000", details: { plate: "wwwww", year: 2020, seats: 6, km: 30000 } },
+    { src: "image/ok1277.jpg", alt: "ok1277 Car", price: "HK $13000", details: { plate: "aaaaa", year: 2019, seats: 5, km: 22000 } },
+  ];
 
-    const indexOfLastCar = currentPage * carsPerPage;
-    const indexOfFirstCar = indexOfLastCar - carsPerPage;
-    const currentCars = cars.slice(indexOfFirstCar, indexOfLastCar);
-    const totalPages = Math.ceil(cars.length / carsPerPage);
+  const indexOfLastCar = currentPage * carsPerPage;
+  const indexOfFirstCar = indexOfLastCar - carsPerPage;
+  const currentCars = cars.slice(indexOfFirstCar, indexOfLastCar);
+  const totalPages = Math.ceil(cars.length / carsPerPage);
 
-    const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
+  const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
-    return (
-      <div className="flex flex-col items-center h-screen bg-white p-4">
-        <div className="flex justify-between w-full mb-4">
-          <button className="text-2xl text-gray-600 icon-hover" aria-label="開啟選單">
-            <i className="fas fa-bars"></i>
-          </button>
-          <h1 className="text-xl font-bold">Carter-Groceries</h1>
-          <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
-        </div>
-        <div className="sell-box w-full">
-          <h2 className="text-lg font-semibold">開始售賣你的產品</h2>
-          <button className="start-button mt-2">開始</button>
-        </div>
-        {currentCars.map((car, index) => (
-          <div key={index} className="w-full mt-4">
-            <div className="relative">
-              <img
-                src={car.src}
-                alt={car.alt}
-                className="car-image"
-                onError={(e) => { e.target.src = 'https://via.placeholder.com/300x200'; }}
-              />
-              <div className="flex justify-between items-center mt-2">
-                <button className="price-button">{car.price}</button>
-                <button
-                  className="details-button"
-                  onClick={() => onDetailsClick(car)}
-                >
-                  Details
-                </button>
-              </div>
+  return (
+    <div className="flex flex-col items-center h-screen bg-white p-4">
+      {/* Header + 返回主畫面按鈕 */}
+      <div className="flex justify-between w-full mb-4">
+        <button className="text-2xl text-gray-600 icon-hover" aria-label="開啟選單">
+          <i className="fas fa-bars"></i>
+        </button>
+        <h1 className="text-xl font-bold">Carter-Groceries</h1>
+        
+        {/* 返回主畫面按鈕 */}
+        <button
+          onClick={onBackClick}
+          className="w-8 h-8 bg-teal-500 text-white rounded-full flex items-center justify-center shadow-md hover:bg-teal-600 hover:scale-110 transition-all duration-200"
+          aria-label="返回主畫面"
+          title="返回主畫面"
+        >
+          <i className="fas fa-home"></i>
+        </button>
+      </div>
+
+      {/* 售賣框 */}
+      <div className="sell-box w-full">
+        <h2 className="text-lg font-semibold">開始售賣你的產品</h2>
+        <button className="start-button mt-2">開始</button>
+      </div>
+
+      {/* 汽車列表 */}
+      {currentCars.map((car, index) => (
+        <div key={index} className="w-full mt-4">
+          <div className="relative">
+            <img
+              src={car.src}
+              alt={car.alt}
+              className="car-image rounded-lg shadow"
+              onError={(e) => { e.target.src = 'https://via.placeholder.com/300x200'; }}
+            />
+            <div className="flex justify-between items-center mt-2">
+              <button className="price-button">{car.price}</button>
+              <button
+                className="details-button"
+                onClick={() => onDetailsClick(car)}
+              >
+                Details
+              </button>
             </div>
           </div>
-        ))}
-        <div className="flex justify-center mt-4">
-          {Array.from({ length: totalPages }, (_, index) => (
-            <button
-              key={index + 1}
-              onClick={() => handlePageChange(index + 1)}
-              className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
-            >
-              {index + 1}
-            </button>
-          ))}
         </div>
-      </div>
-    );
-  };
+      ))}
 
-  // 汽車細節畫面組件
-  const CarDetailsScreen = ({ onBackClick, car, onPurchaseClick }) => {
-    return (
-      <div className="flex flex-col items-center h-screen bg-white p-4">
-        <div className="flex justify-between w-full mb-4">
-          <button className="text-2xl text-gray-600 icon-hover" aria-label="開啟選單">
-            <i className="fas fa-bars"></i>
+      {/* 分頁 */}
+      <div className="flex justify-center mt-4">
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index + 1}
+            onClick={() => handlePageChange(index + 1)}
+            className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
+          >
+            {index + 1}
           </button>
-          <h1 className="text-xl font-bold">Carter-Groceries</h1>
-          <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
-        </div>
-        <div className="relative w-full">
+        ))}
+      </div>
+    </div>
+  );
+};
+  // 汽車細節畫面組件（優化版）
+const CarDetailsScreen = ({ onBackClick, car, onPurchaseClick }) => {
+  return (
+    <div className="flex flex-col h-screen bg-gradient-to-b from-gray-50 to-white">
+      {/* Header */}
+      <div className="flex justify-between items-center p-4 bg-white shadow-sm">
+        <button className="text-2xl text-gray-600 icon-hover" aria-label="開啟選單">
+          <i className="fas fa-bars"></i>
+        </button>
+        <h1 className="text-xl font-bold text-gray-800">Carter-Groceries</h1>
+        
+        {/* 返回主畫面按鈕 */}
+        <button
+          onClick={onBackClick}
+          className="w-8 h-8 bg-teal-500 text-white rounded-full flex items-center justify-center shadow-md hover:bg-teal-600 hover:scale-110 transition-all duration-200"
+          aria-label="返回主畫面"
+          title="返回主畫面"
+        >
+          <i className="fas fa-home"></i>
+        </button>
+      </div>
+
+      <div className="flex-1 overflow-y-auto pb-24 px-4">
+        {/* 汽車圖片 */}
+        <div className="relative mt-4 mb-6 mx-auto max-w-sm">
           <img
             src={car.src}
             alt={car.alt}
-            className="car-image"
+            className="w-full h-56 object-cover rounded-2xl shadow-lg"
+            onError={(e) => { e.target.src = 'https://via.placeholder.com/400x240/1a1a1a/ffffff?text=No+Image'; }}
           />
-          <div className="car-details">
-            <div className="price-button mb-2">{car.price}</div>
-            <p>License Plate Number: {car.details.plate}</p>
-            <p>Product Year: {car.details.year}</p>
-            <p>Seats: {car.details.seats}</p>
-            <p>KM: {car.details.km} About</p>
+          <div className="absolute -bottom-4 left-4">
+            <span className="price-button text-lg px-5 py-2">{car.price}</span>
           </div>
         </div>
-        <div className="flex mt-4">
-          <button className="action-button">WTS</button>
+
+        {/* 車輛資訊卡片 */}
+        <div className="bg-white rounded-2xl shadow-md p-6 mx-2 mb-6 border border-gray-100">
+          <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
+            <i className="fas fa-info-circle mr-2 text-teal-500"></i>
+            車輛規格
+          </h2>
+          <div className="space-y-3 text-gray-700">
+            <div className="flex justify-between">
+              <span className="font-medium">車牌號碼</span>
+              <span className="text-teal-600 font-semibold">{car.details.plate}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-medium">出廠年份</span>
+              <span>{car.details.year} 年</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-medium">座位數</span>
+              <span>{car.details.seats} 座</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-medium">行駛里程</span>
+              <span>{car.details.km.toLocaleString()} km</span>
+            </div>
+          </div>
+        </div>
+
+        {/* 行動按鈕區 */}
+        <div className="flex justify-center gap-4 px-4">
+          <button className="action-button flex-1 max-w-xs">
+            <i className="fas fa-comment-dots mr-2"></i>
+            WTS
+          </button>
+
+          {/* 吸睛 Purchase 按鈕 */}
           <button
             onClick={() => onPurchaseClick(car)}
-            className="email-button"
+            className="group relative overflow-hidden email-button flex-1 max-w-xs transform transition-all duration-300 hover:scale-105"
           >
-            Purchase
+            {/* 脈衝光暈動畫 */}
+            <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-30 animate-ping rounded-xl"></span>
+            <span className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 rounded-xl blur-lg scale-150 animate-pulse"></span>
+
+            {/* 按鈕內容 */}
+            <span className="relative flex items-center justify-center font-bold text-white">
+              <i className="fas fa-shopping-cart mr-2 animate-bounce"></i>
+              Purchase
+            </span>
           </button>
         </div>
+      </div>
+
+      {/* 返回按鈕（固定底部） */}
+      <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2">
         <button
           onClick={onBackClick}
-          className="bg-teal-500 text-white text-lg w-8 h-8 rounded-full flex items-center justify-center mt-4 hover:bg-teal-600 hover:scale-110 transition-transform duration-200"
-          aria-label="返回汽車畫面"
+          className="bg-teal-500 text-white text-lg w-12 h-12 rounded-full flex items-center justify-center shadow-xl hover:bg-teal-600 hover:scale-110 transition-all duration-200"
+          aria-label="返回汽車列表"
         >
           <i className="fas fa-arrow-left"></i>
         </button>
       </div>
-    );
+    </div>
+  );
+};
+
+  // 購買畫面組件（優化版）
+const PurchaseScreen = ({ onBackClick, car }) => {
+  const [deliveryType, setDeliveryType] = useState(''); // 即時 or 預約
+  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedTime, setSelectedTime] = useState('');
+  const [address, setAddress] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('');
+
+  // 產生 09:00 - 21:00 的時間選項（每 30 分鐘）
+  const timeOptions = [];
+  for (let hour = 9; hour <= 21; hour++) {
+    timeOptions.push(`${hour.toString().padStart(2, '0')}:00`);
+    if (hour < 21) timeOptions.push(`${hour.toString().padStart(2, '0')}:30`);
+  }
+
+  const handlePurchase = () => {
+    if (!deliveryType || !address || !paymentMethod) {
+      alert('請填寫所有必填欄位！');
+      return;
+    }
+    if (deliveryType === '預約' && (!selectedDate || !selectedTime)) {
+      alert('請選擇預約日期與時間！');
+      return;
+    }
+
+    const timeText = deliveryType === '即時' ? '即時取貨' : `${selectedDate} ${selectedTime}`;
+    alert(`已購買 ${car.alt}\n價格: ${car.price}\n時間: ${timeText}\n地址: ${address}\n支付方式: ${paymentMethod}`);
   };
 
-  // 購買畫面組件
-  const PurchaseScreen = ({ onBackClick, car }) => {
-    const [time, setTime] = useState('');
-    const [paymentMethod, setPaymentMethod] = useState('');
+  return (
+    <div className="flex flex-col h-screen bg-gradient-to-b from-gray-50 to-white">
+      {/* Header */}
+      <div className="flex justify-between items-center p-4 bg-white shadow-sm">
+        <button className="text-2xl text-gray-600 icon-hover" aria-label="開啟選單">
+          <i className="fas fa-bars"></i>
+        </button>
+        <h1 className="text-xl font-bold text-gray-800">Carter-Groceries</h1>
+        <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+      </div>
 
-    const handlePurchase = () => {
-      alert(`已購買 ${car.alt}，價格: ${car.price}，時間: ${time}，支付方式: ${paymentMethod}`);
-    };
-
-    return (
-      <div className="flex flex-col items-center h-screen bg-white p-4">
-        <div className="flex justify-between w-full mb-4">
-          <button className="text-2xl text-gray-600 icon-hover" aria-label="開啟選單">
-            <i className="fas fa-bars"></i>
-          </button>
-          <h1 className="text-xl font-bold">Carter-Groceries</h1>
-          <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
-        </div>
-        <img
-          src={car.src}
-          alt={car.alt}
-          className="car-image mb-4"
-        />
-        <div className="price-button mb-4">{car.price}</div>
-        <div className="w-full mb-4">
-          <label className="block text-lg font-semibold mb-2">Time</label>
-          <select
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
-            className="w-full p-2 border rounded"
-          >
-            <option value="">即時</option>
-            <option value="預約">預約</option>
-          </select>
-          <p className="text-sm text-gray-500 mt-1">選擇預約或即時購買</p>
-        </div>
-        <div className="w-full mb-4">
-          <label className="block text-lg font-semibold mb-2">地址</label>
-          <input
-            type="text"
-            placeholder="請輸入地址"
-            className="w-full p-2 border rounded"
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
+      <div className="flex-1 overflow-y-auto px-4 pb-24">
+        {/* 汽車圖片 + 價格 */}
+        <div className="mt-4 mb-4">
+          <img
+            src={car.src}
+            alt={car.alt}
+            className="w-full h-48 object-cover rounded-xl shadow-md"
+            onError={(e) => { e.target.src = 'https://via.placeholder.com/400x200'; }}
           />
+          <div className="text-center mt-3">
+            <span className="price-button inline-block text-lg px-6 py-2">{car.price}</span>
+          </div>
         </div>
-        <div className="w-full mb-4">
-          <label className="block text-lg font-semibold mb-2">支付方式</label>
-          <div className="flex space-x-4">
+
+        {/* 送貨方式 */}
+        <div className="mb-5">
+          <label className="block text-lg font-bold text-gray-800 mb-3">
+            <i className="fas fa-clock mr-2 text-teal-500"></i>
+            送貨方式
+          </label>
+          <div className="grid grid-cols-2 gap-3">
             <button
-              onClick={() => setPaymentMethod('現金')}
-              className={`action-button ${paymentMethod === '現金' ? 'bg-teal-600' : ''}`}
+              onClick={() => setDeliveryType('即時')}
+              className={`py-3 rounded-xl font-semibold transition-all ${
+                deliveryType === '即時'
+                  ? 'bg-teal-500 text-white shadow-lg scale-105'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
             >
-              現金
+              即時取貨
             </button>
             <button
-              onClick={() => setPaymentMethod('FPS')}
-              className={`action-button ${paymentMethod === 'FPS' ? 'bg-teal-600' : ''}`}
+              onClick={() => setDeliveryType('預約')}
+              className={`py-3 rounded-xl font-semibold transition-all ${
+                deliveryType === '預約'
+                  ? 'bg-blue-500 text-white shadow-lg scale-105'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
             >
-              FPS
-            </button>
-            <button
-              onClick={() => setPaymentMethod('Alipay')}
-              className={`action-button ${paymentMethod === 'Alipay' ? 'bg-teal-600' : ''}`}
-            >
-              Alipay
+              預約時間
             </button>
           </div>
         </div>
+
+        {/* 條件渲染：預約時間選擇 */}
+        {deliveryType === '預約' && (
+          <div className="space-y-4 mb-5 p-4 bg-blue-50 rounded-xl border border-blue-200 animate-fadeIn">
+            <div>
+              <label className="block text-sm font-semibold text-blue-700 mb-1">
+                選擇日期
+              </label>
+              <input
+                type="date"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+                min={new Date().toISOString().split('T')[0]}
+                className="w-full p-3 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-blue-700 mb-1">
+                選擇時間
+              </label>
+              <select
+                value={selectedTime}
+                onChange={(e) => setSelectedTime(e.target.value)}
+                className="w-full p-3 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400"
+              >
+                <option value="">請選擇時間</option>
+                {timeOptions.map(time => (
+                  <option key={time} value={time}>{time}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        )}
+
+        {/* 地址輸入 */}
+        <div className="mb-5">
+          <label className="block text-lg font-bold text-gray-800 mb-2">
+            <i className="fas fa-map-marker-alt mr-2 text-red-500"></i>
+            送貨地址
+          </label>
+          <input
+            type="text"
+            placeholder="請輸入詳細地址（必填）"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-400 focus:border-transparent"
+            required
+          />
+        </div>
+
+        {/* 支付方式 */}
+        <div className="mb-6">
+          <label className="block text-lg font-bold text-gray-800 mb-3">
+            <i className="fas fa-credit-card mr-2 text-green-600"></i>
+            支付方式
+          </label>
+          <div className="grid grid-cols-3 gap-2">
+            {['現金', 'FPS', 'Alipay'].map(method => (
+              <button
+                key={method}
+                onClick={() => setPaymentMethod(method)}
+                className={`py-3 rounded-xl font-medium transition-all ${
+                  paymentMethod === method
+                    ? 'bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md scale-105'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                {method}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* 確認購買按鈕 */}
         <button
           onClick={handlePurchase}
-          className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors"
+          className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center"
         >
-          Purchase
+          <i className="fas fa-check-circle mr-2 animate-pulse"></i>
+          確認購買
         </button>
+      </div>
+
+      {/* 返回按鈕（固定底部） */}
+      <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2">
         <button
           onClick={onBackClick}
-          className="bg-teal-500 text-white text-lg w-8 h-8 rounded-full flex items-center justify-center mt-4 hover:bg-teal-600 hover:scale-110 transition-transform duration-200"
-          aria-label="返回汽車細節畫面"
+          className="bg-teal-500 text-white text-lg w-12 h-12 rounded-full flex items-center justify-center shadow-xl hover:bg-teal-600 hover:scale-110 transition-all duration-200"
+          aria-label="返回細節頁"
         >
           <i className="fas fa-arrow-left"></i>
         </button>
       </div>
-    );
-  };
+    </div>
+  );
+};
 
   // 主應用程式組件
   const App = () => {
