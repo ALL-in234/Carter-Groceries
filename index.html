@@ -278,118 +278,150 @@
     };
 
     // === 加入貨品頁面（結構化表單）===
-    const AddProductScreen = ({ onBackClick }) => {
-      const [imagePreview, setImagePreview] = useState(null);
-      const [price, setPrice] = useState('');
-      const [plate, setPlate] = useState('');
-      const [year, setYear] = useState('');
-      const [seats, setSeats] = useState('');
-      const [km, setKm] = useState('');
+    // === 加入貨品頁面 + 提交確認 Modal ===
+// === 加入貨品頁面 + 確認 Modal + 返回汽車頁面 ===
+const AddProductScreen = ({ onBackClick, onSuccess }) => {
+  const [imagePreview, setImagePreview] = useState(null);
+  const [price, setPrice] = useState('');
+  const [plate, setPlate] = useState('');
+  const [year, setYear] = useState('');
+  const [seats, setSeats] = useState('');
+  const [km, setKm] = useState('');
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-      const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onloadend = () => setImagePreview(reader.result);
-          reader.readAsDataURL(file);
-        }
-      };
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setImagePreview(reader.result);
+      reader.readAsDataURL(file);
+    }
+  };
 
-      const handleSubmit = () => {
-        if (!imagePreview || !price || !plate || !year || !seats || !km) {
-          alert('請填寫所有欄位！');
-          return;
-        }
+  const handleSubmitClick = () => {
+    if (!imagePreview || !price || !plate || !year || !seats || !km) {
+      alert('請填寫所有欄位！');
+      return;
+    }
+    setShowConfirmModal(true);
+  };
 
-        const newProduct = {
-          src: imagePreview,
-          alt: `車牌 ${plate}`,
-          price: `HK $${parseInt(price).toLocaleString()}`,
-          details: {
-            plate,
-            year: parseInt(year),
-            seats: parseInt(seats),
-            km: parseInt(km)
-          }
-        };
+  const handleConfirm = () => {
+    const newProduct = {
+      src: imagePreview,
+      alt: `車牌 ${plate}`,
+      price: `HK $${parseInt(price).toLocaleString()}`,
+      details: {
+        plate,
+        year: parseInt(year),
+        seats: parseInt(seats),
+        km: parseInt(km)
+      }
+    };
 
-        const pending = JSON.parse(localStorage.getItem('pendingProducts') || '[]');
-        pending.push(newProduct);
-        localStorage.setItem('pendingProducts', JSON.stringify(pending));
+    const pending = JSON.parse(localStorage.getItem('pendingProducts') || '[]');
+    pending.push(newProduct);
+    localStorage.setItem('pendingProducts', JSON.stringify(pending));
 
-        alert('貨品已提交審核！');
-        onBackClick();
-      };
+    setShowConfirmModal(false);
+    onSuccess(); // 觸發返回汽車頁面
+  };
 
-      return (
-        <div className="flex flex-col h-screen bg-white">
-          <div className="flex justify-between items-center p-4 border-b">
-            <button className="text-2xl text-gray-600 icon-hover"><i className="fas fa-bars"></i></button>
-            <h1 className="text-xl font-bold text-gray-800">Carter-Groceries</h1>
-            <button onClick={onBackClick}
-              className="w-8 h-8 bg-teal-500 text-white rounded-full flex items-center justify-center shadow-md hover:bg-teal-600 hover:scale-110 transition-all">
-              <i className="fas fa-home"></i>
-            </button>
+  return (
+    <div className="flex flex-col h-screen bg-white">
+      <div className="flex justify-between items-center p-4 border-b">
+        <button className="text-2xl text-gray-600 icon-hover"><i className="fas fa-bars"></i></button>
+        <h1 className="text-xl font-bold text-gray-800">Carter-Groceries</h1>
+        <button onClick={onBackClick}
+          className="w-8 h-8 bg-teal-500 text-white rounded-full flex items-center justify-center shadow-md hover:bg-teal-600 hover:scale-110 transition-all">
+          <i className="fas fa-home"></i>
+        </button>
+      </div>
+
+      <div className="flex-1 overflow-y-auto px-6 pt-6 pb-24">
+        <h2 className="text-2xl font-bold text-center mb-8">加入貨品</h2>
+
+        <div className="mb-8">
+          <div
+            className="border-2 border-dashed border-gray-400 rounded-xl h-48 bg-gray-100 flex flex-col items-center justify-center cursor-pointer hover:border-teal-500 transition-all"
+            onClick={() => document.getElementById('imageInput').click()}
+          >
+            {imagePreview ? (
+              <img src={imagePreview} alt="預覽" className="w-full h-full object-cover rounded-xl" />
+            ) : (
+              <>
+                <i className="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
+                <p className="text-gray-600 font-medium">點擊上傳圖片</p>
+              </>
+            )}
           </div>
+          <input id="imageInput" type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+        </div>
 
-          <div className="flex-1 overflow-y-auto px-6 pt-6 pb-24">
-            <h2 className="text-2xl font-bold text-center mb-8">加入貨品</h2>
-
-            <div className="mb-8">
-              <div
-                className="border-2 border-dashed border-gray-400 rounded-xl h-48 bg-gray-100 flex flex-col items-center justify-center cursor-pointer hover:border-teal-500 transition-all"
-                onClick={() => document.getElementById('imageInput').click()}
-              >
-                {imagePreview ? (
-                  <img src={imagePreview} alt="預覽" className="w-full h-full object-cover rounded-xl" />
-                ) : (
-                  <>
-                    <i className="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
-                    <p className="text-gray-600 font-medium">點擊上傳圖片</p>
-                  </>
-                )}
-              </div>
-              <input id="imageInput" type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-lg font-bold text-gray-800 mb-2">售價 (HK$)</label>
-                <input type="number" value={price} onChange={e => setPrice(e.target.value)} placeholder="10000" className="w-full px-4 py-3 border-2 border-black rounded-lg text-lg font-bold focus:outline-none focus:ring-2 focus:ring-teal-500" />
-              </div>
-              <div>
-                <label className="block text-lg font-bold text-gray-800 mb-2">車牌號碼</label>
-                <input type="text" value={plate} onChange={e => setPlate(e.target.value)} placeholder="XXXXX" className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" />
-              </div>
-              <div>
-                <label className="block text-lg font-bold text-gray-800 mb-2">出廠年份</label>
-                <input type="number" value={year} onChange={e => setYear(e.target.value)} placeholder="2023" className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" />
-              </div>
-              <div>
-                <label className="block text-lg font-bold text-gray-800 mb-2">座位數</label>
-                <input type="number" value={seats} onChange={e => setSeats(e.target.value)} placeholder="4" className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" />
-              </div>
-              <div>
-                <label className="block text-lg font-bold text-gray-800 mb-2">行駛里程 (km)</label>
-                <input type="number" value={km} onChange={e => setKm(e.target.value)} placeholder="23000" className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" />
-              </div>
-            </div>
-
-            <button onClick={handleSubmit}
-              className="w-full bg-black text-teal-400 py-4 rounded-xl text-lg font-bold hover:bg-gray-900 transition-all shadow-lg mt-8">
-              提交審核
-            </button>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-lg font-bold text-gray-800 mb-2">售價 (HK$)</label>
+            <input type="number" value={price} onChange={e => setPrice(e.target.value)} placeholder="10000" className="w-full px-4 py-3 border-2 border-black rounded-lg text-lg font-bold focus:outline-none focus:ring-2 focus:ring-teal-500" />
           </div>
-
-          <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2">
-            <button onClick={onBackClick}
-              className="bg-teal-500 text-white text-lg w-12 h-12 rounded-full flex items-center justify-center shadow-xl hover:bg-teal-600 hover:scale-110 transition-all duration-200">
-              <i className="fas fa-arrow-left"></i>
-            </button>
+          <div>
+            <label className="block text-lg font-bold text-gray-800 mb-2">車牌號碼</label>
+            <input type="text" value={plate} onChange={e => setPlate(e.target.value)} placeholder="XXXXX" className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+          <div>
+            <label className="block text-lg font-bold text-gray-800 mb-2">出廠年份</label>
+            <input type="number" value={year} onChange={e => setYear(e.target.value)} placeholder="2023" className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+          <div>
+            <label className="block text-lg font-bold text-gray-800 mb-2">座位數</label>
+            <input type="number" value={seats} onChange={e => setSeats(e.target.value)} placeholder="4" className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+          <div>
+            <label className="block text-lg font-bold text-gray-800 mb-2">行駛里程 (km)</label>
+            <input type="number" value={km} onChange={e => setKm(e.target.value)} placeholder="23000" className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" />
           </div>
         </div>
-      );
-    };
+
+        <button onClick={handleSubmitClick}
+          className="w-full bg-black text-teal-400 py-4 rounded-xl text-lg font-bold hover:bg-gray-900 transition-all shadow-lg mt-8">
+          提交審核
+        </button>
+      </div>
+
+      {/* === 提交確認 Modal（按圖設計）=== */}
+      {showConfirmModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-6">
+          <div className="bg-white rounded-none w-full max-w-xs animate-fadeIn">
+            <div className="text-center pt-8 pb-6">
+              <h1 className="text-xl font-bold text-gray-800 mb-12">Carter-Groceries</h1>
+            </div>
+
+            <div className="border-2 border-black mx-8 mb-12">
+              <div className="flex items-center justify-center h-48">
+                <span className="text-2xl font-bold text-gray-800">成功提交</span>
+              </div>
+            </div>
+
+            <div className="flex justify-center pb-8">
+              <button
+                onClick={handleConfirm}
+                className="bg-teal-400 text-black font-bold px-8 py-3 rounded-full text-lg hover:bg-teal-300 transition-all shadow-md"
+              >
+                確認
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2">
+        <button onClick={onBackClick}
+          className="bg-teal-500 text-white text-lg w-12 h-12 rounded-full flex items-center justify-center shadow-xl hover:bg-teal-600 hover:scale-110 transition-all duration-200">
+          <i className="fas fa-arrow-left"></i>
+        </button>
+      </div>
+    </div>
+  );
+};
 
     // === 其他頁面 ===
     const MainScreen = ({ onCarClick }) => (
@@ -715,7 +747,7 @@
       const toPurchase = (car) => { setSelectedCar(car); go('purchase'); };
       const onPurchaseSuccess = (data) => { setOrderData(data); go('success'); };
       const backToMain = () => go('main');
-      const toSell = () => go('addProduct');
+      const toSell = () => go('addProduct');<CarScreen onBackClick={backToMain} onDetailsClick={toDetails} onSellClick={toSell} />
 
       return (
         <div>
@@ -727,7 +759,7 @@
             />
           )}
           {screen === 'review' && <ReviewProductScreen onBackClick={() => go('admin')} />}
-          {screen === 'addProduct' && <AddProductScreen onBackClick={() => go(screen === 'car' ? 'car' : 'admin')} />}
+          {screen === 'addProduct' && (<AddProductScreen onBackClick={() => go('car')} onSuccess={() => go('car')} />)}
           {screen === 'main' && <MainScreen onCarClick={() => go('car')} />}
           {screen === 'car' && <CarScreen onBackClick={backToMain} onDetailsClick={toDetails} onSellClick={toSell} />}
           {screen === 'details' && <CarDetailsScreen onBackClick={() => go('car')} car={selectedCar} onPurchaseClick={toPurchase} />}
