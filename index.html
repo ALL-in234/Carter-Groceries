@@ -38,7 +38,9 @@
 .review-label { font-weight: 500; color: #4b5563; }
 .review-value { font-weight: 600; color: #1f2937; }
 .btn-reject { background-color: #ef4444; color: white; padding: 12px 24px; border-radius: 50px; font-weight: bold; min-width: 120px; }
-.btn-approve { background-color: #2ED3C0; color: #000; padding: 12px 24px; border-radius: 50px; font-weight: bold; min-width: 120px; }  </style></head>
+.btn-approve { background-color: #2ED3C0; color: #000; padding: 12px 24px; border-radius: 50px; font-weight: bold; min-width: 120px; }  
+  </style>
+</head>
 <body class="bg-white">
   <div id="root"></div>
 
@@ -531,7 +533,7 @@
       );
     };
 
-    const LandDetailsScreen = ({ onBackClick, land, onPurchaseClick }) => (
+   const LandDetailsScreen = ({ onBackClick, land, onPurchaseClick }) => (
       <div className="flex flex-col h-screen bg-gradient-to-b from-gray-50 to-white">
         <div className="flex justify-between items-center p-4 bg-white shadow-sm">
           <button className="text-2xl text-gray-600 icon-hover"><i className="fas fa-bars"></i></button>
@@ -550,9 +552,9 @@
             <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center"><i className="fas fa-info-circle mr-2 text-teal-500"></i>土地規格</h2>
             <div className="space-y-3 text-gray-700">
               <div className="flex justify-between"><span className="font-medium">地段編號</span><span className="text-teal-600 font-semibold">{land.details.lotNumber}</span></div>
-              <div className="flex justify-between"><span className="font-medium">土地面積</span><span>{land.details.area} 年</span></div>
-              <div className="flex justify-between"><span className="font-medium">用途分區</span><span>{land.details.zoning} 座</span></div>
-              <div className="flex justify-between"><span className="font-medium">建築物類型</span><span>{land.details.buildingType.toLocaleString()} km</span></div>
+              <div className="flex justify-between"><span className="font-medium">土地面積</span><span className="text-teal-600 font-semibold">{land.details.area.toLocaleString()} 平方米</span></div>
+              <div className="flex justify-between"><span className="font-medium">用途分區</span><span className="text-teal-600 font-semibold">{land.details.zoning}</span></div>
+              <div className="flex justify-between"><span className="font-medium">建築物類型</span><span className="text-teal-600 font-semibold">{land.details.buildingType}</span></div>
             </div>
           </div>
           <div className="flex justify-center gap-4 px-4">
