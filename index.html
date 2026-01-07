@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     .icon-hover:hover { color: #3b82f6; transform: scale(1.1); transition: all 0.2s ease; }
-    .land-image { width: 100%; height: auto; object-fit: cover; }
+    .land-image { width: 100%; height: 240px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
     .price-button { background-color: #000; color: #8dffa0; padding: 10px 20px; border-radius: 10px; font-weight: bold; }
     .details-button { background-color: #2ED3C0; color: #000; padding: 10px 20px; border-radius: 10px; font-weight: bold; }
     .pagination-button { background-color: #4b5563; color: white; padding: 8px 16px; border-radius: 5px; margin: 0 4px; }
@@ -23,30 +23,72 @@
     .start-button { background-color: #000; color: #2ED3C0; padding: 10px 20px; border-radius: 20px; font-weight: bold; margin-top: 10px; transition: all 0.2s ease; }
     .start-button:hover { background-color: #1a1a1a; transform: scale(1.05); }
 
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    .animate-fadeIn { animation: fadeIn 0.6s ease-out; }
-    @keyframes ping { 75%, 100% { transform: scale(2); opacity: 0; } }
-    .animate-ping { animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite; }
-    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
-    .animate-bounce { animation: bounce 0.6s infinite; }
+/* 動畫 */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.animate-fadeIn { animation: fadeIn 0.6s ease-out; }
+@keyframes ping { 75%, 100% { transform: scale(2); opacity: 0; } }
+.animate-ping { animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite; }
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+.animate-bounce { animation: bounce 0.6s infinite; }
 
-    .review-price { background-color: #000; color: #8dffa0; padding: 12px 24px; border-radius: 12px; font-weight: bold; font-size: 1.25rem; }
-    .review-line { height: 2px; background: linear-gradient(to right, transparent, #2ED3C0, transparent); margin: 16px 0; }
-    .review-item { display: flex; justify-content: space-between; font-size: 1.1rem; margin-bottom: 12px; }
-    .review-label { font-weight: 500; color: #4b5563; }
-    .review-value { font-weight: 600; color: #1f2937; }
-    .btn-reject { background-color: #ef4444; color: white; padding: 12px 24px; border-radius: 50px; font-weight: bold; min-width: 120px; }
-    .btn-approve { background-color: #2ED3C0; color: #000; padding: 12px 24px; border-radius: 50px; font-weight: bold; min-width: 120px; }
-  </style>
-</head>
+/* 審核頁面專用樣式 */
+.review-price { background-color: #000; color: #8dffa0; padding: 12px 24px; border-radius: 12px; font-weight: bold; font-size: 1.25rem; }
+.review-line { height: 2px; background: linear-gradient(to right, transparent, #2ED3C0, transparent); margin: 16px 0; }
+.review-item { display: flex; justify-content: space-between; font-size: 1.1rem; margin-bottom: 12px; }
+.review-label { font-weight: 500; color: #4b5563; }
+.review-value { font-weight: 600; color: #1f2937; }
+.btn-reject { background-color: #ef4444; color: white; padding: 12px 24px; border-radius: 50px; font-weight: bold; min-width: 120px; }
+.btn-approve { background-color: #2ED3C0; color: #000; padding: 12px 24px; border-radius: 50px; font-weight: bold; min-width: 120px; }  </style></head>
 <body class="bg-white">
   <div id="root"></div>
 
   <script type="text/babel">
     const { useState, useEffect } = React;
 
+    // === 圖片壓縮工具函數 ===
+    const compressAndResizeImage = (file, callback) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 800;
+          const MAX_HEIGHT = 600;
+          let width = img.width;
+          let height = img.height;
+
+          // 計算縮放比例，保持長寬比
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // 轉為高品質 JPEG (品質 0.85)
+          canvas.toBlob(callback, 'image/jpeg', 0.85);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    };
+
+    // === 進入通道頁面 ===
     const EntryScreen = ({ onEnterAsBuyer, onEnterAsAdmin }) => (
       <div className="flex flex-col h-screen bg-white px-6 pt-8">
+        <div className="flex justify-between items-center text-xs text-gray-600 mb-4">
+          <div className="flex items-center space-x-1"></div>
+        </div>
         <h1 className="text-2xl font-bold text-center mb-24">Carter-Groceries</h1>
         <div className="flex-1 flex flex-col justify-center items-center space-y-8 animate-fadeIn">
           <button onClick={onEnterAsBuyer}
@@ -61,6 +103,7 @@
       </div>
     );
 
+    // === 管理員頁面 ===
     const AdminScreen = ({ onBackToEntry, onNavigateToReview }) => {
       const [orders, setOrders] = useState([]);
       const [pendingCount, setPendingCount] = useState(0);
@@ -87,7 +130,7 @@
             <div className="text-center mb-6">
               <button onClick={onNavigateToReview}
                 className="bg-teal-500 text-black font-bold py-3 px-8 rounded-full text-lg hover:bg-teal-600 transition-all relative">
-                審核土地
+                審核貨品
                 {pendingCount > 0 && (
                   <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center animate-pulse">
                     {pendingCount}
@@ -102,7 +145,7 @@
               ) : (
                 orders.map((order, i) => (
                   <div key={i} className="border-2 border-teal-500 rounded-xl p-4 bg-teal-50">
-                    <p className="font-medium">土地名稱：{order.land.alt}</p>
+                    <p className="font-medium">貨物名稱：{order.land.alt}</p>
                     <p>售價：{order.price}</p>
                     <p>送貨時間：{order.delivery}</p>
                     <p>送貨地址：{order.address}</p>
@@ -115,6 +158,7 @@
       );
     };
 
+    // === 審核貨品頁面 ===
     const ReviewProductScreen = ({ onBackClick }) => {
       const [pendingProducts, setPendingProducts] = useState([]);
       const [currentIndex, setCurrentIndex] = useState(0);
@@ -128,6 +172,7 @@
 
       const handleApprove = () => {
         if (!currentProduct) return;
+
         const approved = JSON.parse(localStorage.getItem('approvedProducts') || '[]');
         approved.push(currentProduct);
         localStorage.setItem('approvedProducts', JSON.stringify(approved));
@@ -137,7 +182,7 @@
         setPendingProducts(updated);
 
         if (updated.length === 0) {
-          alert('所有土地已審核完成！');
+          alert('所有貨品已審核完成！');
           onBackClick();
         } else {
           setCurrentIndex(0);
@@ -146,12 +191,13 @@
 
       const handleReject = () => {
         if (!currentProduct) return;
+
         const updated = pendingProducts.filter((_, i) => i !== currentIndex);
         localStorage.setItem('pendingProducts', JSON.stringify(updated));
         setPendingProducts(updated);
 
         if (updated.length === 0) {
-          alert('所有土地已審核完成！');
+          alert('所有貨品已審核完成！');
           onBackClick();
         } else {
           setCurrentIndex(Math.min(currentIndex, updated.length - 1));
@@ -170,7 +216,7 @@
               </button>
             </div>
             <div className="flex-1 flex items-center justify-center">
-              <p className="text-gray-500 text-lg">暫無待審核土地</p>
+              <p className="text-gray-500 text-lg">暫無待審核貨品</p>
             </div>
           </div>
         );
@@ -190,11 +236,17 @@
           <div className="flex-1 overflow-y-auto px-4 pt-4 pb-32">
             <div className="max-w-md mx-auto">
               <div className="mb-4">
-                <img src={currentProduct.src} alt="土地圖片" className="w-full h-64 object-cover rounded-2xl shadow-lg" />
+                <img 
+                  src={currentProduct.src} 
+                  alt="產品圖片" 
+                  className="land-image"
+                />
               </div>
 
               <div className="flex justify-center mb-4">
-                <div className="review-price">{currentProduct.price}</div>
+                <div className="review-price">
+                  {currentProduct.price}
+                </div>
               </div>
 
               <div className="review-line"></div>
@@ -219,15 +271,24 @@
               </div>
 
               <div className="flex justify-center gap-6 mt-8 px-4">
-                <button onClick={handleReject} className="btn-reject hover:bg-red-600 transition-all">拒絕</button>
-                <button onClick={handleApprove} className="btn-approve hover:bg-teal-400 transition-all">批准</button>
+                <button onClick={handleReject} className="btn-reject hover:bg-red-600 transition-all">
+                  拒絕
+                </button>
+                <button onClick={handleApprove} className="btn-approve hover:bg-teal-400 transition-all">
+                  批准
+                </button>
               </div>
 
               {pendingProducts.length > 1 && (
                 <div className="flex justify-center mt-6 space-x-2">
                   {pendingProducts.map((_, i) => (
-                    <div key={i} onClick={() => setCurrentIndex(i)}
-                      className={`w-2 h-2 rounded-full cursor-pointer transition-all ${i === currentIndex ? 'bg-teal-500 w-8' : 'bg-gray-300'}`} />
+                    <div
+                      key={i}
+                      onClick={() => setCurrentIndex(i)}
+                      className={`w-2 h-2 rounded-full cursor-pointer transition-all ${
+                        i === currentIndex ? 'bg-teal-500 w-8' : 'bg-gray-300'
+                      }`}
+                    />
                   ))}
                 </div>
               )}
@@ -244,6 +305,7 @@
       );
     };
 
+    // === 加入貨品頁面 ===
     const AddProductScreen = ({ onBackClick, onSuccess }) => {
       const [imagePreview, setImagePreview] = useState(null);
       const [price, setPrice] = useState('');
@@ -252,12 +314,17 @@
       const [zoning, setZoning] = useState('');
       const [buildingType, setBuildingType] = useState('');
       const [showConfirmModal, setShowConfirmModal] = useState(false);
+      const [isProcessing, setIsProcessing] = useState(false);
 
       const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
+          setIsProcessing(true);
           const reader = new FileReader();
-          reader.onloadend = () => setImagePreview(reader.result);
+          reader.onloadend = () => {
+            setImagePreview(reader.result);
+            setIsProcessing(false);
+          };
           reader.readAsDataURL(file);
         }
       };
@@ -310,12 +377,14 @@
                 className="border-2 border-dashed border-gray-400 rounded-xl h-48 bg-gray-100 flex flex-col items-center justify-center cursor-pointer hover:border-teal-500 transition-all"
                 onClick={() => document.getElementById('imageInput').click()}
               >
-                {imagePreview ? (
+                {isProcessing ? (
+                  <i className="fas fa-spinner fa-spin text-4xl text-gray-400 mb-2"></i>
+                ) : imagePreview ? (
                   <img src={imagePreview} alt="預覽" className="w-full h-full object-cover rounded-xl" />
                 ) : (
                   <>
                     <i className="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
-                    <p className="text-gray-600 font-medium">點擊上傳土地圖片</p>
+                    <p className="text-gray-600 font-medium">點擊上傳圖片</p>
                   </>
                 )}
               </div>
@@ -325,23 +394,23 @@
             <div className="space-y-4">
               <div>
                 <label className="block text-lg font-bold text-gray-800 mb-2">售價 (HK$)</label>
-                <input type="number" value={price} onChange={e => setPrice(e.target.value)} placeholder="5000000" className="w-full px-4 py-3 border-2 border-black rounded-lg text-lg font-bold focus:outline-none focus:ring-2 focus:ring-teal-500" />
+                <input type="number" value={price} onChange={e => setPrice(e.target.value)} placeholder="10000" className="w-full px-4 py-3 border-2 border-black rounded-lg text-lg font-bold focus:outline-none focus:ring-2 focus:ring-teal-500" />
               </div>
               <div>
                 <label className="block text-lg font-bold text-gray-800 mb-2">地段編號</label>
-                <input type="text" value={lotNumber} onChange={e => setLotNumber(e.target.value)} placeholder="DD123 Lot 456" className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" />
+                <input type="text" value={lotNumber} onChange={e => setLotNumber(e.target.value)} placeholder="XXXXX" className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" />
               </div>
               <div>
-                <label className="block text-lg font-bold text-gray-800 mb-2">土地面積 (平方米)</label>
-                <input type="number" value={area} onChange={e => setArea(e.target.value)} placeholder="800" className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" />
+                <label className="block text-lg font-bold text-gray-800 mb-2">土地面積</label>
+                <input type="number" value={area} onChange={e => setArea(e.target.value)} placeholder="2023" className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" />
               </div>
               <div>
                 <label className="block text-lg font-bold text-gray-800 mb-2">用途分區</label>
-                <input type="text" value={zoning} onChange={e => setZoning(e.target.value)} placeholder="住宅(甲類)" className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" />
+                <input type="number" value={zoning} onChange={e => setZoning(e.target.value)} placeholder="4" className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" />
               </div>
               <div>
                 <label className="block text-lg font-bold text-gray-800 mb-2">建築物類型</label>
-                <input type="text" value={buildingType} onChange={e => setBuildingType(e.target.value)} placeholder="村屋 / 農地 / 丁屋地" className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" />
+                <input type="number" value={buildingType} onChange={e => setBuildingType(e.target.value)} placeholder="23000" className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" />
               </div>
             </div>
 
@@ -357,14 +426,18 @@
                 <div className="text-center pt-8 pb-6">
                   <h1 className="text-xl font-bold text-gray-800 mb-12">Carter-Groceries</h1>
                 </div>
+
                 <div className="border-2 border-black mx-8 mb-12">
                   <div className="flex items-center justify-center h-48">
                     <span className="text-2xl font-bold text-gray-800">成功提交</span>
                   </div>
                 </div>
+
                 <div className="flex justify-center pb-8">
-                  <button onClick={handleConfirm}
-                    className="bg-teal-400 text-black font-bold px-8 py-3 rounded-full text-lg hover:bg-teal-300 transition-all shadow-md">
+                  <button
+                    onClick={handleConfirm}
+                    className="bg-teal-400 text-black font-bold px-8 py-3 rounded-full text-lg hover:bg-teal-300 transition-all shadow-md"
+                  >
                     確認
                   </button>
                 </div>
@@ -382,6 +455,7 @@
       );
     };
 
+    // === 修改後的分類頁面：只保留土地入口 ===
     const MainScreen = ({ onLandClick }) => (
       <div className="flex flex-col items-center justify-center h-screen bg-white px-8">
         <div className="flex justify-between w-full mb-8 absolute top-4">
@@ -392,8 +466,10 @@
 
         <div className="flex-1 flex flex-col items-center justify-center">
           <h2 className="text-2xl font-bold text-gray-800 mb-12">選擇分類</h2>
-          <button onClick={onLandClick}
-            className="flex flex-col items-center justify-center w-64 h-48 bg-teal-400 text-white font-bold text-2xl rounded-2xl hover:bg-teal-500 hover:scale-105 transition-all duration-300 shadow-2xl">
+          <button 
+            onClick={onLandClick} 
+            className="flex flex-col items-center justify-center w-64 h-48 bg-teal-400 text-white font-bold text-2xl rounded-2xl hover:bg-teal-500 hover:scale-105 transition-all duration-300 shadow-2xl"
+          >
             <i className="fas fa-map-marker-alt text-5xl mb-4"></i>
             土地
           </button>
@@ -401,6 +477,7 @@
       </div>
     );
 
+    // === 以下頁面保持不變 ===
     const LandScreen = ({ onBackClick, onDetailsClick, onSellClick }) => {
       const [currentPage, setCurrentPage] = useState(1);
       const landsPerPage = 4;
@@ -409,7 +486,7 @@
       useEffect(() => {
         const approved = JSON.parse(localStorage.getItem('approvedProducts') || '[]');
         const demo = [
-          { src: "https://via.placeholder.com/400x300?text=Land+Plot", alt: "新界丁屋地", price: "HK $5,000,000", details: { lotNumber: "DD123 Lot 456", area: 800, zoning: "住宅(甲類)", buildingType: "丁屋" } },
+          { src: "https://via.placeholder.com/400x300?text=Land+Plot", alt: "土地 1", price: "HK $10000", details: { lotNumber: "xxxxx", area: 2023, zoning: 4, buildingType: 23000 } },
         ];
         setLands([...demo, ...approved]);
       }, []);
@@ -429,7 +506,7 @@
             </button>
           </div>
           <div className="sell-box w-full">
-            <h2 className="text-lg font-semibold">開始售賣你的土地</h2>
+            <h2 className="text-lg font-semibold">開始售賣你的產品</h2>
             <button onClick={onSellClick} className="start-button">開始</button>
           </div>
           {currentLands.map((land, i) => (
@@ -470,12 +547,12 @@
             <div className="absolute -bottom-4 left-4"><span className="price-button text-lg px-5 py-2">{land.price}</span></div>
           </div>
           <div className="bg-white rounded-2xl shadow-md p-6 mx-2 mb-6 border border-gray-100">
-            <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center"><i className="fas fa-info-circle mr-2 text-teal-500"></i>土地資料</h2>
+            <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center"><i className="fas fa-info-circle mr-2 text-teal-500"></i>土地規格</h2>
             <div className="space-y-3 text-gray-700">
               <div className="flex justify-between"><span className="font-medium">地段編號</span><span className="text-teal-600 font-semibold">{land.details.lotNumber}</span></div>
-              <div className="flex justify-between"><span className="font-medium">土地面積</span><span>{land.details.area.toLocaleString()} 平方米</span></div>
-              <div className="flex justify-between"><span className="font-medium">用途分區</span><span>{land.details.zoning}</span></div>
-              <div className="flex justify-between"><span className="font-medium">建築物類型</span><span>{land.details.buildingType}</span></div>
+              <div className="flex justify-between"><span className="font-medium">土地面積</span><span>{land.details.area} 年</span></div>
+              <div className="flex justify-between"><span className="font-medium">用途分區</span><span>{land.details.zoning} 座</span></div>
+              <div className="flex justify-between"><span className="font-medium">建築物類型</span><span>{land.details.buildingType.toLocaleString()} km</span></div>
             </div>
           </div>
           <div className="flex justify-center gap-4 px-4">
@@ -531,12 +608,12 @@
               <div className="text-center mt-3"><span className="price-button inline-block text-lg px-6 py-2">{land.price}</span></div>
             </div>
             <div className="mb-5">
-              <label className="block text-lg font-bold text-gray-800 mb-3">交樓方式</label>
+              <label className="block text-lg font-bold text-gray-800 mb-3">送貨方式</label>
               <div className="grid grid-cols-2 gap-3">
                 {['即時', '預約'].map(t => (
                   <button key={t} onClick={() => setDeliveryType(t)}
                     className={`py-3 rounded-xl font-semibold transition-all ${deliveryType === t ? 'bg-teal-500 text-white shadow-lg scale-105' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
-                    {t === '即時' ? '即時交樓' : '預約看地'}
+                    {t === '即時' ? '即時取貨' : '預約時間'}
                   </button>
                 ))}
               </div>
@@ -557,7 +634,7 @@
               </div>
             )}
             <div className="mb-5">
-              <label className="block text-lg font-bold text-gray-800 mb-2">聯絡地址（用於簽約）</label>
+              <label className="block text-lg font-bold text-gray-800 mb-2">送貨地址</label>
               <input type="text" placeholder="請輸入詳細地址（必填）" value={address} onChange={e => setAddress(e.target.value)} className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-400" />
             </div>
             <div className="mb-6">
@@ -614,8 +691,8 @@
               <p className="text-lg"><span className="text-gray-700">售價：</span><span className="text-2xl font-bold text-teal-500 ml-2">{price}</span></p>
             </div>
             <div className="space-y-4 text-lg text-gray-700">
-              <p><span className="font-medium">交樓時間：</span><span className="ml-2">{delivery}</span></p>
-              <p><span className="font-medium">聯絡地址：</span><span className="ml-2">{address}</span></p>
+              <p><span className="font-medium">送達時間：</span><span className="ml-2">{delivery}</span></p>
+              <p><span className="font-medium">收貨地址：</span><span className="ml-2">{address}</span></p>
               <p><span className="font-medium">支付方式：</span><span className="ml-2">{payment}</span></p>
             </div>
           </div>
@@ -623,6 +700,7 @@
       );
     };
 
+    // === 管理員登入 Modal ===
     const LoginModal = ({ onLogin, onCancel }) => {
       const [password, setPassword] = useState('');
       const [error, setError] = useState('');
@@ -647,20 +725,33 @@
             </div>
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">密碼</label>
-              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSubmit()} placeholder=""
-                className="w-full px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent" autoFocus />
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
+                placeholder=""
+                className="w-full px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                autoFocus
+              />
               {error && <p className="text-red-500 text-sm text-center mt-1 animate-pulse">{error}</p>}
             </div>
             <div className="flex gap-3 mt-6">
-              <button onClick={onCancel} className="flex-1 py-3 border border-gray-400 rounded-lg font-medium hover:bg-gray-50 transition">取消</button>
-              <button onClick={handleSubmit} className="flex-1 py-3 bg-black text-teal-400 rounded-lg font-bold hover:bg-gray-900 transition">登入</button>
+              <button onClick={onCancel}
+                className="flex-1 py-3 border border-gray-400 rounded-lg font-medium hover:bg-gray-50 transition">
+                取消
+              </button>
+              <button onClick={handleSubmit}
+                className="flex-1 py-3 bg-black text-teal-400 rounded-lg font-bold hover:bg-gray-900 transition">
+                登入
+              </button>
             </div>
           </div>
         </div>
       );
     };
 
+    // === 主應用 ===
     const App = () => {
       const [screen, setScreen] = useState('entry');
       const [selectedLand, setSelectedLand] = useState(null);
@@ -677,7 +768,7 @@
       };
 
       const toDetails = (land) => { setSelectedLand(land); go('details'); };
-      const toPurchase = () => { go('purchase'); };
+      const toPurchase = (land) => { setSelectedLand(land); go('purchase'); };
       const onPurchaseSuccess = (data) => { setOrderData(data); go('success'); };
       const backToMain = () => go('main');
       const toSell = () => go('addProduct');
@@ -685,16 +776,23 @@
       return (
         <div>
           {screen === 'entry' && <EntryScreen onEnterAsBuyer={enterAsBuyer} onEnterAsAdmin={enterAsAdmin} />}
-          {screen === 'admin' && <AdminScreen onBackToEntry={() => go('entry')} onNavigateToReview={() => go('review')} />}
+          {screen === 'admin' && (
+            <AdminScreen
+              onBackToEntry={() => go('entry')}
+              onNavigateToReview={() => go('review')}
+            />
+          )}
           {screen === 'review' && <ReviewProductScreen onBackClick={() => go('admin')} />}
           {screen === 'addProduct' && <AddProductScreen onBackClick={() => go('land')} onSuccess={() => go('land')} />}
           {screen === 'main' && <MainScreen onLandClick={() => go('land')} />}
           {screen === 'land' && <LandScreen onBackClick={backToMain} onDetailsClick={toDetails} onSellClick={toSell} />}
-          {screen === 'details' && <LandDetailsScreen onBackClick={() => go('land')} land={selectedLand} onPurchaseClick={() => { setSelectedLand(selectedLand); toPurchase(); }} />}
+          {screen === 'details' && <LandDetailsScreen onBackClick={() => go('land')} land={selectedLand} onPurchaseClick={toPurchase} />}
           {screen === 'purchase' && <PurchaseScreen onBackClick={() => go('details')} land={selectedLand} onPurchaseSuccess={onPurchaseSuccess} />}
           {screen === 'success' && <PurchaseSuccessScreen orderData={orderData} onBackToMain={backToMain} />}
 
-          {showLoginModal && <LoginModal onLogin={handleAdminLogin} onCancel={() => setShowLoginModal(false)} />}
+          {showLoginModal && (
+            <LoginModal onLogin={handleAdminLogin} onCancel={() => setShowLoginModal(false)} />
+          )}
         </div>
       );
     };
@@ -703,3 +801,5 @@
   </script>
 </body>
 </html>
+
+
